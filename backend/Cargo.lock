@@ -58,6 +58,8 @@ dependencies = [
  "json",
  "log",
  "once_cell",
+ "rand",
+ "rand_core",
  "regex",
  "serde",
  "serde_derive",

@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS umkm CASCADE;
 DROP TABLE IF EXISTS umkmresource CASCADE;
 
 ---investasi
-DROP TABLE IF EXISTS investasi 
+DROP TABLE IF EXISTS investasi CASCADE; 
 DROP TABLE IF EXISTS investmentmessage CASCADE;
 
 ---expertise
