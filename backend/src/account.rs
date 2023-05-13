@@ -1,241 +1,173 @@
+use crate::DURATION;
+use hmac::Hmac;
 use rand;
+use sha2::Sha256;
 use std::sync::Arc;
 type JSON = std::collections::hash_map::HashMap<String, String>;
+use crate::utils::response::*;
+use crate::utils::token::*;
+use std::time;
 
 pub async fn register(data: JSON, db: Arc<tokio_postgres::Client>) -> warp::http::Response<String> {
+    let email = if let Some(x) = data.get("email".into()) {
+        x.clone()
+    } else {
+        return r401!{ "message" => "need fields 'email', 'username' and 'password'" };
+    };
+
     let username = if let Some(x) = data.get("username".into()) {
         x.clone()
     } else {
-        return warp::http::Response::builder()
-            .status(401)
-            .header("Content-Type", "application/json")
-            .body(r#"{"error":true,"message":"need fields 'username' and 'password'"}"#.to_owned())
-            .unwrap();
+        return r401!{ "message" => "need fields 'email', 'username' and 'password'" };
     };
+
     let password = if let Some(x) = data.get("password".into()) {
         x.clone()
     } else {
-        return warp::http::Response::builder()
-            .status(401)
-            .header("Content-Type", "application/json")
-            .body(r#"{"error":true,"message":"need fields 'username' and 'password'"}"#.to_owned())
-            .unwrap();
+        return r401!{ "message" => "need fields 'email', 'username' and 'password'" };
     };
-    let a = argon2::Argon2::default();
-    let p = password.as_bytes();
-    let mut s = argon2::password_hash::SaltString::generate(&mut rand::rngs::ThreadRng::default());
-    let hashed_password = argon2::PasswordHasher::hash_password(&a, p, &mut s)
-        .unwrap()
-        .to_string();
     let res = db
         .query(
-            &format!(
-                r#"
-        SELECT name FROM account WHERE name = '{username}'
-        "#
-            ),
-            &[],
+            r#"
+        SELECT email FROM account WHERE email = $1
+        "#,
+            &[&email],
         )
         .await
         .unwrap();
     if !res.is_empty() {
-        return warp::http::Response::builder()
-            .status(401)
-            .header("Content-Type", "application/json")
-            .body(r#"{"error":true,"message":"username was taken"}"#.to_owned())
-            .unwrap();
+        return r401! { "message" => "email already registered" } ;
     }
-    // account is not in db
-    db.execute(
-        r#"INSERT INTO account (name, passwordhash, email, phone) VALUES ($1, $2, 'whatever@gmail.com','1231213')"#,
-        &[&username, &hashed_password.as_str()],
-    )
-    .await
-    .unwrap();
-    return warp::http::Response::builder()
-        .status(200)
-        .header("Content-Type", "application/json")
-        .body(r#"{"message"":"success"}"#.to_owned())
-        .unwrap();
-}
-pub async fn login(data: JSON, db: Arc<tokio_postgres::Client>) -> warp::http::Response<String> {
-    let username = if let Some(x) = data.get("username".into()) {
-        x.clone()
-    } else {
-        return warp::http::Response::builder()
-            .status(401)
-            .header("Content-Type", "application/json")
-            .body(r#"{"error":true,"message":"need fields 'username' and 'password'"}"#.to_owned())
-            .unwrap();
-    };
-    let password = if let Some(x) = data.get("password".into()) {
-        x.clone()
-    } else {
-        return warp::http::Response::builder()
-            .status(401)
-            .header("Content-Type", "application/json")
-            .body(r#"{"error":true,"message":"need fields 'username' and 'password'"}"#.to_owned())
-            .unwrap();
-    };
-    let a = argon2::Argon2::default();
-    let p = password.as_bytes();
-    let res = db
-        .query(
-            &format!(
-                r#"
-        SELECT passwordhash FROM account 
-        WHERE name = $1
-        "#
-            ),
-            &[&username],
-        )
-        .await
-        .unwrap();
-    if let [first, ..] = &res[..] {
-        use argon2::PasswordVerifier;
-        let pw = first.try_get::<&str, &str>("passwordhash").unwrap();
-        if let Ok(_) = a.verify_password(
-            p,
-            &argon2::PasswordHash::parse(&pw, argon2::password_hash::Encoding::B64).unwrap(),
-        ) {
-            return warp::http::Response::builder()
-                .status(200)
-                .header("Content-Type", "application/json")
-                .body(r#"{"message":"correct"}"#.to_owned())
-                .unwrap();
-        }
-    }
-    return warp::http::Response::builder()
-        .status(404)
-        .header("Content-Type", "application/json")
-        .body(r#"{"error":true,"message":"something has gone wrong"}"#.to_owned())
-        .unwrap();
-}
 
-pub async fn delete(data: JSON, db: Arc<tokio_postgres::Client>) -> warp::http::Response<String> {
-    let username = if let Some(x) = data.get("username".into()) {
-        x.clone()
-    } else {
-        return warp::http::Response::builder()
-            .status(401)
-            .header("Content-Type", "application/json")
-            .body(r#"{"error":true,"message":"need fields 'username' and 'password'"}"#.to_owned())
-            .unwrap();
-    };
-    let password = if let Some(x) = data.get("password".into()) {
-        x.clone()
-    } else {
-        return warp::http::Response::builder()
-            .status(401)
-            .header("Content-Type", "application/json")
-            .body(r#"{"error":true,"message":"need fields 'username' and 'password'"}"#.to_owned())
-            .unwrap();
-    };
-    let a = argon2::Argon2::default();
-    let p = password.as_bytes();
-    let res = db
-        .query(
-            &format!(
-                r#"
-        SELECT passwordhash FROM account 
-        WHERE name = $1
-        "#
-            ),
-            &[&username],
-        )
-        .await
-        .unwrap();
-    if let [first, ..] = &res[..] {
-        use argon2::PasswordVerifier;
-        let pw = first.try_get::<&str, &str>("passwordhash").unwrap();
-        if let Ok(_) = a.verify_password(
-            p,
-            &argon2::PasswordHash::parse(&pw, argon2::password_hash::Encoding::B64).unwrap(),
-        ) {
-            db.execute("DELETE FROM account WHERE name = $1", &[&username])
-                .await
-                .unwrap();
-            return warp::http::Response::builder()
-                .status(200)
-                .header("Content-Type", "application/json")
-                .body(r#"{"message":"correct"}"#.to_owned())
-                .unwrap();
-        }
-    }
-    return warp::http::Response::builder()
-        .status(404)
-        .header("Content-Type", "application/json")
-        .body(r#"{"error":true,"message":"something has gone wrong"}"#.to_owned())
-        .unwrap();
-}
-
-/*
-*
-
-
-    let username = if let Some(x) = data.get("username".into()) {
-        x.clone()
-    } else {
-        return warp::http::Response::builder()
-            .status(401)
-            .header("Content-Type", "application/json")
-            .body(r#"{"error":true,"message":"need fields 'username' and 'password'"}"#.to_owned())
-            .unwrap();
-    };
-    let password = if let Some(x) = data.get("password".into()) {
-        x.clone()
-    } else {
-        return warp::http::Response::builder()
-            .status(401)
-            .header("Content-Type", "application/json")
-            .body(r#"{"error":true,"message":"need fields 'username' and 'password'"}"#.to_owned())
-            .unwrap();
-    };
     let a = argon2::Argon2::default();
     let p = password.as_bytes();
     let mut s = argon2::password_hash::SaltString::generate(&mut rand::rngs::ThreadRng::default());
     let hashed_password = argon2::PasswordHasher::hash_password(&a, p, &mut s)
         .unwrap()
         .to_string();
+
+    db.execute(
+        r#"INSERT INTO account (name, passwordhash, email, phone) VALUES ($1, $2, $3, '1231213')"#,
+        &[&username, &hashed_password.as_str(), &email],
+    )
+    .await
+    .unwrap();
+    r200!{
+        "message" => "successfully created account",
+    }
+}
+pub async fn login(
+    data: JSON,
+    db: Arc<tokio_postgres::Client>,
+    key: Hmac<Sha256>,
+) -> warp::http::Response<String> {
+    let email = if let Some(x) = data.get("email".into()) {
+        x.clone()
+    } else {
+        return r401!{ "message" => "need fields 'email' and 'password'" };
+    };
+    let password = if let Some(x) = data.get("password".into()) {
+        x.clone()
+    } else {
+        return r401!{ "message" => "need fields 'email' and 'password'" };
+    };
+    let a = argon2::Argon2::default();
+    let p = password.as_bytes();
+    let res = db
+        .query(
+            r#"
+        SELECT id, passwordhash FROM account 
+        WHERE email = $1
+        "#,
+            &[&email],
+        )
+        .await
+        .unwrap();
+    if let [first, ..] = &res[..] {
+        use argon2::PasswordVerifier;
+        let pw = first.try_get::<&str, &str>("passwordhash").unwrap();
+        if let Ok(_) = a.verify_password(
+            p,
+            &argon2::PasswordHash::parse(&pw, argon2::password_hash::Encoding::B64).unwrap(),
+        ) {
+            let now = time::SystemTime::now().duration_since(time::UNIX_EPOCH).unwrap().as_secs(); 
+            let mut claims = std::collections::BTreeMap::new();
+
+            let exp = (now+DURATION).to_string();
+            claims.insert("exp", exp.as_str());
+            claims.insert("exp", exp.as_str());
+
+            let token = create_token(&claims, &key);
+            return r200!{"token" => token};
+        }
+    }
+    return r404!{"message" => "something has gone wrong"}
+}
+
+pub async fn delete(data: JSON, db: Arc<tokio_postgres::Client>) -> warp::http::Response<String> {
+    let email = if let Some(x) = data.get("email".into()) {
+        x.clone()
+    } else {
+        return r401!{ "message" => "need fields 'email' and 'password'" };
+    };
+    let password = if let Some(x) = data.get("password".into()) {
+        x.clone()
+    } else {
+        return r401!{ "message" => "need fields 'email' and 'password'" };
+    };
+    let a = argon2::Argon2::default();
+    let p = password.as_bytes();
     let res = db
         .query(
             &format!(
                 r#"
-        SELECT name FROM account
-        WHERE name = $1
-        AND passwordhash = $2
+        SELECT passwordhash FROM account 
+        WHERE email = $1
         "#
             ),
-            &[&username, &hashed_password],
+            &[&email],
         )
         .await
         .unwrap();
-    if let [_, ..] = &res[..] {
-        db.execute(
-            r#"
-            DELETE FROM account
-            WHERE username = $1
-            AND passwordhash = $2
-            "#,
-            &[&username, &hashed_password],
-        )
-        .await
-        .unwrap();
-
-        return warp::http::Response::builder()
-            .status(200)
-            .header("Content-Type", "application/json")
-            .body(r#"{"message":"user deleted"}"#.to_owned())
-            .unwrap();
+    if let [first, ..] = &res[..] {
+        use argon2::PasswordVerifier;
+        let pw = first.try_get::<&str, &str>("passwordhash").unwrap();
+        if let Ok(_) = a.verify_password(
+            p,
+            &argon2::PasswordHash::parse(&pw, argon2::password_hash::Encoding::B64).unwrap(),
+        ) {
+            db.execute("DELETE FROM account WHERE email = $1", &[&email])
+                .await
+                .unwrap();
+            return r200!{"message" => "account deleted"};
+        }
     }
-    return warp::http::Response::builder()
-        .status(404)
-        .header("Content-Type", "application/json")
-        .body(r#"{"error":true,"message":"something has gone wrong"}"#.to_owned())
-        .unwrap();
+    r404!{"message" => "something has gone wrong"}
+}
+
+pub async fn verify(
+    data: JSON,
+    key: Hmac<Sha256>,
+) -> warp::http::Response<String> {
+    let token = if let Some(x) = data.get("token".into()) {
+        x.clone()
+    } else {
+        return r401!{"message" => "need fields 'token'"};
+    };
+    if let Ok(v) = verify_token(&token, &key){
+        if let Some(exp) = v.get("exp"){
+            let now = time::SystemTime::now().duration_since(time::UNIX_EPOCH).unwrap().as_secs(); 
+            if now-exp.parse::<u64>().unwrap()>DURATION{
+                return r401!{
+                    "message" => "token has expired",
+                }
+            }
+        }
+        return r200!{
+            "message" => "correct!",
+        }
+    }
+    return r401!{"message" => "invalid token",}
+}
 
 
-
-
-*
-*/
