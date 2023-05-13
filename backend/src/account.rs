@@ -1,3 +1,4 @@
+use crate::DURATION;
 use hmac::Hmac;
 use rand;
 use sha2::Sha256;
@@ -52,8 +53,7 @@ pub async fn register(data: JSON, db: Arc<tokio_postgres::Client>) -> warp::http
     .await
     .unwrap();
     r200!{
-        "message" => "success",
-        "yes" => "yabol!!!",
+        "message" => "successfully created account",
     }
 }
 pub async fn login(
@@ -91,7 +91,6 @@ pub async fn login(
             &argon2::PasswordHash::parse(&pw, argon2::password_hash::Encoding::B64).unwrap(),
         ) {
             let now = time::SystemTime::now().duration_since(time::UNIX_EPOCH).unwrap().as_secs(); 
-            const DURATION: u64 = 60*60*2;
             let mut claims = std::collections::BTreeMap::new();
 
             let exp = (now+DURATION).to_string();
@@ -156,9 +155,16 @@ pub async fn verify(
         return r401!{"message" => "need fields 'token'"};
     };
     if let Ok(v) = verify_token(&token, &key){
+        if let Some(exp) = v.get("exp"){
+            let now = time::SystemTime::now().duration_since(time::UNIX_EPOCH).unwrap().as_secs(); 
+            if now-exp.parse::<u64>().unwrap()>DURATION{
+                return r401!{
+                    "message" => "token has expired",
+                }
+            }
+        }
         return r200!{
             "message" => "correct!",
-            "debug" => v
         }
     }
     return r401!{"message" => "invalid token",}

@@ -11,6 +11,9 @@ use anyhow::Result;
 // register investor
 use utils::sql::*;
 use std::sync::Arc;
+
+const DURATION: u64 = 60*60*2;
+
 #[tokio::main]
 async fn main() -> Result<()>{
     let private_token_signature = dotenv::var("PRIVATE_TOKEN_SIGNATURE")?;
