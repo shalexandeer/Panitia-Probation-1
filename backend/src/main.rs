@@ -1,4 +1,6 @@
 use warp::Filter;
+use hmac::{Hmac, Mac};
+use sha2::Sha256;
 
 mod account;
 
@@ -11,9 +13,8 @@ use utils::sql::*;
 use std::sync::Arc;
 #[tokio::main]
 async fn main() -> Result<()>{
-    // Match any request and return hello world!
-
-
+    let private_token_signature = dotenv::var("PRIVATE_TOKEN_SIGNATURE")?;
+    let key: Hmac<Sha256> = Hmac::new_from_slice(private_token_signature.as_bytes()).unwrap();
     let pg_config = dotenv::var("POSTGRES_URL")?;
 
     let (client, connection) = tokio_postgres::connect(&pg_config, tokio_postgres::NoTls)
@@ -39,7 +40,8 @@ async fn main() -> Result<()>{
     let login = warp::path("login")
         .and(warp::post())
         .and(warp::body::json())
-        .and(with_state(db_cli.clone()))        
+        .and(with_state(db_cli.clone())) 
+        .and(with_state(key.clone()))
         .then(account::login);
 
     let delete = warp::path("delete")
@@ -48,10 +50,17 @@ async fn main() -> Result<()>{
         .and(with_state(db_cli.clone()))        
         .then(account::delete);
 
+    let verify = warp::path("verify")
+        .and(warp::post())
+        .and(warp::body::json())
+        .and(with_state(key.clone()))        
+        .then(account::verify);
+
     let routes = routes
         .or(register)
         .or(login)
-        .or(delete);
+        .or(delete)
+        .or(verify);
 
     warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
     return Ok(())

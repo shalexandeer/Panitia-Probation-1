@@ -42,9 +42,9 @@ CREATE TABLE IF NOT EXISTS paymentlog(
 ---account 
 CREATE TABLE IF NOT EXISTS account(
     id BIGSERIAL PRIMARY KEY,
+    email TEXT NOT NULL UNIQUE,
     name TEXT NOT NULL,
     passwordhash TEXT,
-    email TEXT NOT NULL,
     phone TEXT NOT NULL,
     tsjoin TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     isconsultant BOOLEAN NOT NULL DEFAULT FALSE,
