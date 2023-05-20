@@ -1,16 +1,5 @@
-const Heading = ({ children }) => {
-    return <div>{children}</div>;
+const Heading = ({ text, className }) => {
+    return <h1 className={`${className} text-[#111827]`}>{text}</h1>;
 };
-
-const MainHeading = ({ text }) => {
-    return <h1 className='main-heading'>{text}</h1>;
-};
-
-const SecondHeading = ({ text }) => {
-    return <h1 className='secondary-heading'>{text}</h1>;
-};
-
-Heading.MainHeading = MainHeading;
-Heading.SecondHeading = SecondHeading;
 
 export default Heading;

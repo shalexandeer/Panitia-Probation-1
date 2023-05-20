@@ -1,29 +1,18 @@
+import Heading from './Heading';
+
 const Card = ({ children, className }) => {
-    return <div className={`card rounded-[26px]  bg-white ${className}`}>{children}</div>;
-};
-const Body = ({ children, className }) => {
-    return <div className={` ${className} flex flex-col justify-between`}>{children}</div>;
+    return <div className={`${className == undefined ? '' : className} bg-white w-full sm:w-[531px] max-h-[876px] rounded-[32px] p-9 sm:p-16`}>{children}</div>;
 };
 
-const Top = ({ text, number, className }) => {
-    return (
-        <div className={`card-content ${className}`}>
-            <div className='flex justify-between'>
-                <div className='flex flex-col'>
-                    <h1 className={'card-title-dashboard'}>{text}</h1>
-                    <h1 className={'text-[32px] font-[700] card-title-number'}>{number}</h1>
-                </div>
-                <div className='flex justify-center items-center'>
-                    <div className='icon-add w-[32px] h-[32px] flex justify-center'>
-                        <img src='./src/assets/sum-icons.svg' alt='' />
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+const Title = ({ text = 'Create an account' }) => {
+    return <h1 className='text-3xl font-semibold'>{text}</h1>;
 };
 
+const Body = ({ children }) => {
+    return <div>{children}</div>;
+};
+
+Card.Title = Title;
 Card.Body = Body;
-Card.Top = Top;
 
 export default Card;

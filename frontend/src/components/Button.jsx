@@ -1,9 +1,8 @@
-const Button = ({ className, text, type = 'primary', children, ...props }) => {
+const Button = ({ children, type = 'submit', className, ...props }) => {
     return (
-        <button {...props} className={`btn btn-${type} ${className} btn-xs sm:btn-sm md:btn-md lg:btn-lg`}>
+        <button {...props} className={`${className} p-4 rounded-lg `}>
             {children}
         </button>
     );
 };
-
 export default Button;

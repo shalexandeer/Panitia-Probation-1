@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "daisyui": "^2.51.6",
+    "react-hook-form": "^7.43.9"
+  }
+}
