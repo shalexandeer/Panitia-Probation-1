@@ -7,7 +7,7 @@ Required fields:
     -email (string)
     -phone (string)
     -password (string)
-    -typ ("U" or "I" or "C")
+    -typ ("U" or "I" or "C") #U => UMKM, I => Investor, C => Consultant
     -address (string)
 Returns:
     2XX|4XX: {"message":string}
