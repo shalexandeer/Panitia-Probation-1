@@ -1,5 +1,4 @@
 #![allow(unused)]
-
 pub fn resp(code: u16, json: &str) -> warp::http::Response<String> {
     let mut s: String = "{".into();
     return warp::http::Response::builder()
@@ -11,13 +10,18 @@ pub fn resp(code: u16, json: &str) -> warp::http::Response<String> {
 
 macro_rules! build_boundless_json_string {
     ($key:expr => $val:expr $(,)?) => {
-        format!("{:?}:{:?}",$key,$val)
+        {
+            let tmp = serde_json::to_value($val).unwrap();
+            format!("{:?}:{}",$key,tmp)
+        }
     };
     ($key0:expr => $val0:expr,$($key:expr=>$val:expr),+$(,)?) => {
-        format!("{:?}:{:?},{}",$key0,$val0,build_boundless_json_string!{$($key=>$val),+})
+        let tmp = serde_json::to_value($val0).unwrap();
+        format!("{:?}:{},{}",$key0,tmp,build_boundless_json_string!{$($key=>$val),+})
     };
 }
 
+//I WAS HERE TODO JSON BUILDER..BECAUSE TUPLES DONT WORK WITH JSON
 macro_rules! r200 {
     ($($key:expr => $val:expr),+ $(,)?) => {
         {
@@ -67,8 +71,23 @@ macro_rules! r404 {
         }
     };
 }
+
+macro_rules! r500 {
+    ($($key:expr => $val:expr),+ $(,)?) => {
+        {
+        let s = format!(r#"{{{}}}"#,build_boundless_json_string!($($key => $val),+));
+        warp::http::Response::builder()
+            .status(500)
+            .header("Content-Type","application/json")
+            .body(s.into())
+            .unwrap()
+        }
+    };
+}
+
 pub(crate) use r200;
 pub(crate) use r400;
 pub(crate) use r401;
 pub(crate) use r404;
+pub(crate) use r500;
 pub(crate) use build_boundless_json_string;
