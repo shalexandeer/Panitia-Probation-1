@@ -1,6 +1,6 @@
 const Button = ({ children, type = 'submit', className, ...props }) => {
     return (
-        <button {...props} className={`${className} p-4 rounded-lg `}>
+        <button {...props} className={`${className} btn rounded-lg `}>
             {children}
         </button>
     );

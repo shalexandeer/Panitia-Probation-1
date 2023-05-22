@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 
 const Navbar = ({ children, className }) => {
+    //get window size
     const [sizeWindow, setSizeWindow] = useState();
 
     useEffect(() => {
@@ -11,40 +12,43 @@ const Navbar = ({ children, className }) => {
         window.addEventListener('resize', handleResize);
     }, [sizeWindow]);
 
+    //get page pathname
+    const path = location.pathname;
     return (
         <>
             <div className='drawer drawer-end'>
                 <input id='my-drawer-3' type='checkbox' className='drawer-toggle' />
-                <div className='drawer-content flex flex-col'>
+                <div className={`drawer-content flex flex-col ${path == '/auth'}`}>
                     {/* <!-- Navbar --> */}
-                    <div className={`w-full navbar ${className} lg:pl-[100px] lg:pr-[100px] `}>
-                        <div className='flex-1 gap-7'>
+                    <div className={`w-full navbar-new min-h-[none_!important] ${path == '/auth' ? 'bg-transparent' : 'bg-white border-b-[0.5px]'} ${className}  pt-5 pb-5 sm:pl-6 sm:pr-6 xl:pl-[100px] xl:pr-[100px]`}>
+                        <div className='flex-1 gap-7  '>
                             <div>
-                                <img src={`${sizeWindow < 640 ? './public/img/logo-blue.svg' : './public/img/logo.svg'}`} alt='' />
+                                <Link to={'/'}>
+                                    <img src={`${sizeWindow < 640 || path != '/auth' ? './public/img/logo-blue.svg' : './public/img/logo.svg'}`} alt='' />
+                                </Link>
                             </div>{' '}
-                            <ul className='menu menu-horizontal navbar-wrapper gap-7 text-2xl text-white items-center hidden lg:flex'>
+                            <ul className={`menu menu-horizontal navbar-wrapper gap-7 text-xl ${path == '/auth' ? 'text-white' : 'text-[#111827]'} items-center hidden lg:flex`} id='navbar-items'>
                                 {/* <!-- Navbar menu content here --> */}
 
-                                <li className=''>
+                                <li className={`${path == '/' && 'activeLink'}`}>
                                     <Link to='/'>Home</Link>
                                 </li>
-                                <li>
+                                <li className={`${path == '/consultation' && 'activeLink'}`}>
                                     <Link to='/consultation'>Consultation</Link>
                                 </li>
-                                <li>
+                                <li className={`${path == '/fundingform' && 'activeLink'}`}>
                                     <Link to='/fundingform'>Funding Form</Link>
                                 </li>
-                                <li>
+                                <li className={`${path == '/forum' && 'activeLink'}`}>
                                     <Link to='/forum'>Forum</Link>
                                 </li>
                             </ul>
                         </div>
                         <div className={`flex-none hidden ${location.pathname == '/auth' ? 'hidden' : 'lg:block'}`}>
-                            <ul className='flex navbar-wrapper gap-7 text-2xl text-white items-center'>
-                                <li>
-                                    <Link to='/auth'>Login</Link>
-                                </li>
-                            </ul>
+                            <Link to='/auth'>
+                                {' '}
+                                <button className='btn btn-xs sm:btn-sm md:btn-md lg:btn-lg bg-[#1496FF] border-none text-white'>Login</button>
+                            </Link>
                         </div>
                         <div className='flex-none lg:hidden'>
                             <label htmlFor='my-drawer-3' className='btn btn-square btn-ghost'>
@@ -61,11 +65,18 @@ const Navbar = ({ children, className }) => {
                     <label htmlFor='my-drawer-3' className='drawer-overlay'></label>
                     <ul className='menu p-4 w-80 bg-base-100'>
                         {/* <!-- Sidebar content here --> */}
-                        <li>
-                            <a>Sidebar Item 1</a>
+
+                        <li className={`${path == '/' && 'activeLink'}`}>
+                            <Link to='/'>Home</Link>
                         </li>
-                        <li>
-                            <a>Sidebar Item 2</a>
+                        <li className={`${path == '/consultation' && 'activeLink'}`}>
+                            <Link to='/consultation'>Consultation</Link>
+                        </li>
+                        <li className={`${path == '/fundingform' && 'activeLink'}`}>
+                            <Link to='/fundingform'>Funding Form</Link>
+                        </li>
+                        <li className={`${path == '/forum' && 'activeLink'}`}>
+                            <Link to='/forum'>Forum</Link>
                         </li>
                     </ul>
                 </div>
