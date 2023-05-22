@@ -1,0 +1,156 @@
+[POST]
+/register
+Headers:
+    Content-Type: application/json
+Required fields:
+    -username (string)
+    -email (string)
+    -phone (string)
+    -password (string)
+    -typ ("U" or "I" or "C") #U => UMKM, I => Investor, C => Consultant
+    -address (string)
+Returns:
+    2XX|4XX: {"message":string}
+    
+[POST]
+/login
+Headers:
+    Content-Type: application/json
+Required fields:
+    -email (string)
+    -password (string)
+Returns:
+    4XX:{"message":string}
+    2XX:{"token":<jwt>} # string jwt
+
+[DELETE]
+/delete
+Headers:
+    Content-Type: application/json
+    Authorization: Bearer <jwt>
+Returns:
+    4XX:{"message":string}
+    2XX:{"message":"account deleted"}
+    
+[GET]
+/list_forums
+Returns:
+    200:{"list":[int,string,string][]) #id,title,tscreate (YYYY:MM:DD HH:MM:SS+ZZ) contoh: 2023-05-20 19:07:48+07
+    
+[POST]
+/write_forum
+Headers:
+    Content-Type: application/json
+    Authorization: Bearer <jwt>
+Required fields:
+    -forum_id (int)
+    -message (string)
+Returns:
+    5XX: {"message":string}
+    2XX: {"list":"sent message"} #ini typo harusnya message bukan list
+
+[GET]
+/load_forum/<id>
+Returns:
+    2XX: {"list":[int,int,string,string,string][]} #message_id,writer_id,name,message,tswrite...ts=timestamp with timezone
+    
+[GET]
+/list_konsultan
+Returns:
+    2XX: {"list":[int,string,string,string,string,string][]} #id,name,email,phone,avataruri,tsjoin
+
+[GET]
+/list_konsultasi
+Headers:
+    Content-Type: application/json
+    Authorization: Bearer <jwt>
+Returns:
+    4XX:{"message":string}
+    2XX:{"list":[string,string,int,string,string,string][]} #title,name,nominal,tsc,tsac,tsd
+
+[POST]
+/write_konsultasi
+Headers:
+    Content-Type: application/json
+    Authorization: Bearer <jwt>
+Required fields:
+    -konsultasi_id (int)
+    -message (string)
+Returns:
+    4XX:{"message":string}
+    2XX:{"list":string}#typo harusnya message
+    5XX:{"message":string}
+
+[GET]
+/load_konsultasi/<id>
+Headers:
+    Content-Type: application/json
+    Authorization: Bearer <jwt>
+Returns:
+    4XX:{"message":string}
+    2XX:{"list":[int,string,bool,string][]} #id,message,isclient,tssent 
+    
+[POST]
+/accept_consultationoffer
+Headers:
+    Content-Type: application/json
+    Authorization: Bearer <jwt>
+Required fields:
+    -consultant (int) #id consultant
+    -category (string)
+Returns:
+    4XX:{"message":string}
+    2XX:{"message":string}
+    5XX:{"message":string}
+
+[POST]
+/create_consultationoffer
+Headers:
+    Content-Type: application/json
+    Authorization: Bearer <jwt>
+Required fields:
+    -title (string)
+    -category (string)
+    -description (string)
+    -nominal (int)
+    -duration (int) #detik
+Returns:
+    4XX:{"message":string}
+    2XX:{"message":string}
+    5XX:{"message":string}
+
+[DELETE]
+/delete_consultationoffer?category=<category>
+Headers:
+    Content-Type: application/json
+    Authorization: Bearer <jwt>
+Returns:
+    4XX:{"message":string}
+    2XX:{"message":string}
+    5XX:{"message":string}
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
