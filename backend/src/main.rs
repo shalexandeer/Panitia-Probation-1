@@ -134,7 +134,11 @@ async fn main() -> Result<()>{
         .then(konsultasi::write_konsultasi);
 
     let cors = warp::cors()
-        .allow_any_origin();
+        .allow_any_origin()
+        .allow_methods(vec!["GET", "POST", "DELETE"])
+        .allow_headers(vec!["Content-Type","Authorization"])
+        .allow_credentials(true)
+    ;
 
     let routes = hello
         .or(register)
