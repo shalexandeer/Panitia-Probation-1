@@ -133,6 +133,13 @@ async fn main() -> Result<()>{
         .and(with_state(db_cli.clone())) 
         .then(konsultasi::write_konsultasi);
 
+    let cors = warp::cors()
+        .allow_any_origin()
+        .allow_methods(vec!["GET", "POST", "DELETE"])
+        .allow_headers(vec!["Content-Type","Authorization"])
+        .allow_credentials(true)
+    ;
+
     let routes = hello
         .or(register)
         .or(login)
@@ -147,6 +154,7 @@ async fn main() -> Result<()>{
         .or(delete_consultationoffer)
         .or(load_konsultasi)
         .or(write_konsultasi)
+        .with(cors)
     ;
 
     warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
