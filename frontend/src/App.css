@@ -62,8 +62,7 @@
 .navbar-new{
     display: flex;
     align-items: center;
-    padding: var(--navbar-padding, 0.5rem);
-    width: 100%;
+    /* padding: var(--navbar-padding, 0.5rem); */
 }
 :where(.navbar-new > *){
     display: inline-flex;

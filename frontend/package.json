@@ -3,6 +3,7 @@
     "private": true,
     "version": "0.0.0",
     "type": "module",
+    "proxy": "http://localhost:3030",
     "scripts": {
         "lint": "eslint .",
         "lint:fix": "eslint --fix",
@@ -13,7 +14,7 @@
     },
     "dependencies": {
         "@tabler/icons-react": "^2.2.0",
-        "axios": "^1.3.2",
+        "axios": "^1.4.0",
         "clsx": "^1.2.1",
         "daisyui": "^2.50.0",
         "react": "^18.2.0",

@@ -14,8 +14,8 @@ const Payment = () => {
     };
 
     return (
-        <div className=' bg-[#FAFCFE] bg-no-repeat bg-cover '>
-            <div className='lg:grid lg:grid-cols-2 gap-[3.75rem] pt-[2rem] pl-5 pr-5 sm:pl-6 sm:pr-6 xl:pl-[100px] xl:pr-[100px]'>{pageCount == 0 ? <Payment.Order handlePage={handlePage} /> : pageCount == 1 ? <Payment.DetailPayment handlePage={handlePage} /> : ''}</div>
+        <div className=' bg-[#FAFCFE] bg-no-repeat bg-cover container mx-auto '>
+            <div className='lg:grid lg:grid-cols-2 gap-[3.75rem] pt-[2rem] pl-5 pr-5 sm:pl-6 sm:pr-6 xl:p-0 '>{pageCount == 0 ? <Payment.Order handlePage={handlePage} /> : pageCount == 1 ? <Payment.DetailPayment handlePage={handlePage} /> : ''}</div>
         </div>
     );
 };

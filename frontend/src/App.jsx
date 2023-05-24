@@ -7,12 +7,13 @@ import Forum from './pages/Forum';
 import Consultation from './pages/Consultation';
 import Navbar from './components/Navbar';
 import Payment from './pages/Payment';
+import Chat from './pages/Chat';
 
 function App() {
     const location = useLocation().pathname;
     return (
         <div className=''>
-            <Navbar className={`${location === '/auth' ? 'absolute' : ''}`}>
+            <Navbar className={`${location === '/auth' ? 'fixed' : ''}`}>
                 <Routes>
                     <Route path='/' element={<Home />} location={location} />
                     <Route path='auth' element={<Auth />} location={location} />
@@ -20,6 +21,7 @@ function App() {
                     <Route path='fundingform' element={<FundingForm />} location={location} />
                     <Route path='forum' element={<Forum />} />
                     <Route path='payment' element={<Payment />} />
+                    <Route path='chat' element={<Chat />} />
                 </Routes>
             </Navbar>
         </div>
