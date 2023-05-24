@@ -221,6 +221,7 @@ pub async fn bearer_verify_complete(token: &str, key: &Hmac<Sha256>, db: &Arc<to
         anyhow::bail!("user blocked")
     };
 } 
+
 pub async fn bearer_verify(token: &str, key: &Hmac<Sha256>, db: &Arc<tokio_postgres::Client>)->Result<TokenData>{
     let token = if let Some(t) = token.strip_prefix("Bearer "){t} else {
         token
@@ -246,6 +247,7 @@ pub async fn bearer_verify(token: &str, key: &Hmac<Sha256>, db: &Arc<tokio_postg
         anyhow::bail!("user blocked")
     };
 } 
+
 pub async fn str_verify(token: &str, key: &Hmac<Sha256>, db: &Arc<tokio_postgres::Client>)->Result<TokenData>{
     let v =  verify_token(&token, &key)?;
     if db.query("SELECT id FROM account WHERE blockeduntil>NOW() AND id=$1", &[&v.id]).await.unwrap().len()>0{
@@ -257,6 +259,7 @@ pub async fn str_verify(token: &str, key: &Hmac<Sha256>, db: &Arc<tokio_postgres
     }
     return Ok(v);
 } 
+
 pub async fn pure_verify(data: &JSON, key: &Hmac<Sha256>, db: &Arc<tokio_postgres::Client>)->Result<TokenData>{
     let token = data.get("token".into()).ok_or(anyhow::anyhow!("no token"))?;
     let v =  verify_token(&token, &key)?;

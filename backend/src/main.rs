@@ -136,7 +136,12 @@ async fn main() -> Result<()>{
     let cors = warp::cors()
         .allow_any_origin()
         .allow_methods(vec!["GET", "POST", "DELETE"])
-        .allow_headers(vec!["Content-Type","Authorization"])
+        .allow_headers(
+            vec![
+                "Content-Type","Authorization",
+                "content-type","authorization",
+            ]
+        )
         .allow_credentials(true)
     ;
 
