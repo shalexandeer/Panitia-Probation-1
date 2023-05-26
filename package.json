@@ -1,4 +1,5 @@
 {
+  "proxy": "http://0.0.0.0:3030",
   "dependencies": {
     "daisyui": "^2.51.6",
     "react-hook-form": "^7.43.9"

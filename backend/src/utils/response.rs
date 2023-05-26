@@ -11,13 +11,11 @@ pub fn resp(code: u16, json: &str) -> warp::http::Response<String> {
 macro_rules! build_boundless_json_string {
     ($key:expr => $val:expr $(,)?) => {
         {
-            let tmp = serde_json::to_value($val).unwrap();
-            format!("{:?}:{}",$key,tmp)
+            format!("{:?}:{}",$key,serde_json::to_value($val).unwrap())
         }
     };
     ($key0:expr => $val0:expr,$($key:expr=>$val:expr),+$(,)?) => {
-        let tmp = serde_json::to_value($val0).unwrap();
-        format!("{:?}:{},{}",$key0,tmp,build_boundless_json_string!{$($key=>$val),+})
+        format!("{:?}:{},{}",$key0,serde_json::to_value($val0).unwrap(),build_boundless_json_string!{$($key=>$val),+})
     };
 }
 

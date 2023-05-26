@@ -56,6 +56,7 @@ dependencies = [
  "dotenv",
  "futures-util",
  "hmac",
+ "hyper",
  "itertools",
  "json",
  "jwt",
@@ -72,6 +73,7 @@ dependencies = [
  "thiserror",
  "tokio",
  "tokio-postgres",
+ "tokio-stream",
  "warp",
 ]
 

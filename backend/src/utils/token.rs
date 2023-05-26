@@ -51,7 +51,7 @@ impl UserClass{
 #[derive(Debug,Clone,Copy,Hash,PartialEq,Eq,Deserialize,Serialize)]
 pub struct TokenData{
     pub id: i64,
-    pub exp: u64,
+    pub iat: u64,
 }
 
 pub fn create_token(data: &BTreeMap<&str, &str>, key: &Hmac<Sha256>) -> String {
@@ -67,9 +67,9 @@ pub fn verify_token(token: &str, key: &Hmac<Sha256>) -> Result<TokenData> {
 
 fn btree2tokdata(mut bt: BTreeMap<String, String>) -> Result<TokenData>{
     let id: i64 = bt.remove("id").ok_or(anyhow::anyhow!("need field 'id'"))?.parse()?;
-    let exp: u64 = bt.remove("exp").ok_or(anyhow::anyhow!("need field 'exp'"))?.parse()?;
+    let iat: u64 = bt.remove("iat").ok_or(anyhow::anyhow!("need field 'iat'"))?.parse()?;
     Ok(TokenData{
         id,
-        exp,
+        iat,
     })
 }

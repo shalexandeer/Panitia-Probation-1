@@ -1,4 +1,4 @@
-use crate::DURATION;
+use crate::{DURATION,FLASH_DURATION};
 use serde::{Deserialize, Deserializer};
 use argon2::PasswordVerifier;
 use hmac::Hmac;
@@ -109,12 +109,12 @@ pub async fn login(
         p,
         &argon2::PasswordHash::parse(&real_password, argon2::password_hash::Encoding::B64).unwrap(),
     ) {
-        let now = time::SystemTime::now().duration_since(time::UNIX_EPOCH).unwrap().as_secs(); 
+        let now = time::SystemTime::now().duration_since(time::UNIX_EPOCH).unwrap().as_secs().to_string(); 
         let mut claims = std::collections::BTreeMap::new();
 
         let id_str = id.to_string();
-        let exp = (now+DURATION).to_string();
-        claims.insert("exp", exp.as_str());
+        //let exp = (now+DURATION).to_string();
+        claims.insert("iat", now.as_str());
         claims.insert("id", id_str.as_str());
 
         let token = create_token(&claims, &key);
@@ -123,7 +123,6 @@ pub async fn login(
     return r404!{"message" => "failed to verify password"}
 }
 
-const ERR_FIELD_DEL: &str = "need fields 'typ', 'email', and 'password'";
 pub async fn delete(bearer: String, key: Hmac<Sha256>, db: Arc<tokio_postgres::Client>) -> warp::http::Response<String> {
     let token = if let Ok(t) = bearer_verify(&bearer, &key,&db).await{t}else{
         return r401!{
@@ -156,6 +155,9 @@ pub struct AccountData{
 }
 
 use anyhow::Result;
+/// DO NOT USE FOR FLASH AUTHENTICATION. THIS DURATION IS THE LONG ONE. FLASH AUTHENTICATION NEEDS
+/// SHORT-LIVED TOKENS   
+///
 ///bearer verify that also fetches public account information
 pub async fn bearer_verify_complete(token: &str, key: &Hmac<Sha256>, db: &Arc<tokio_postgres::Client>)->Result<(TokenData,AccountData)>{
     let token = if let Some(t) = token.strip_prefix("Bearer "){t} else {
@@ -213,7 +215,7 @@ pub async fn bearer_verify_complete(token: &str, key: &Hmac<Sha256>, db: &Arc<to
             objective,
         };
         let now = time::SystemTime::now().duration_since(time::UNIX_EPOCH).unwrap().as_secs(); 
-        if v.exp<=now{
+        if v.iat+DURATION<=now{
             anyhow::bail!("token expired")
         }
         return Ok((v,acd));
@@ -222,6 +224,7 @@ pub async fn bearer_verify_complete(token: &str, key: &Hmac<Sha256>, db: &Arc<to
     };
 } 
 
+// DO NOT USE FOR FLASH VERIFICATION
 pub async fn bearer_verify(token: &str, key: &Hmac<Sha256>, db: &Arc<tokio_postgres::Client>)->Result<TokenData>{
     let token = if let Some(t) = token.strip_prefix("Bearer "){t} else {
         token
@@ -239,7 +242,7 @@ pub async fn bearer_verify(token: &str, key: &Hmac<Sha256>, db: &Arc<tokio_postg
     "#, &[&v.id]).await.unwrap();
     if let [_, ..] = &tmp[..]{
         let now = time::SystemTime::now().duration_since(time::UNIX_EPOCH).unwrap().as_secs(); 
-        if v.exp<=now{
+        if v.iat+DURATION<=now{
             anyhow::bail!("token expired")
         }
         return Ok(v);
@@ -248,30 +251,30 @@ pub async fn bearer_verify(token: &str, key: &Hmac<Sha256>, db: &Arc<tokio_postg
     };
 } 
 
-pub async fn str_verify(token: &str, key: &Hmac<Sha256>, db: &Arc<tokio_postgres::Client>)->Result<TokenData>{
-    let v =  verify_token(&token, &key)?;
-    if db.query("SELECT id FROM account WHERE blockeduntil>NOW() AND id=$1", &[&v.id]).await.unwrap().len()>0{
-        anyhow::bail!("user blocked")
-    };
-    let now = time::SystemTime::now().duration_since(time::UNIX_EPOCH).unwrap().as_secs(); 
-    if v.exp<=now{
-        anyhow::bail!("token expired")
-    }
-    return Ok(v);
-} 
-
-pub async fn pure_verify(data: &JSON, key: &Hmac<Sha256>, db: &Arc<tokio_postgres::Client>)->Result<TokenData>{
-    let token = data.get("token".into()).ok_or(anyhow::anyhow!("no token"))?;
-    let v =  verify_token(&token, &key)?;
-    if db.query("SELECT id FROM account WHERE blockeduntil>NOW() AND id=$1", &[&v.id]).await.unwrap().len()>0{
-        anyhow::bail!("user blocked")
-    };
-    let now = time::SystemTime::now().duration_since(time::UNIX_EPOCH).unwrap().as_secs(); 
-    if v.exp<=now{
-        anyhow::bail!("token expired")
-    }
-    return Ok(v);
-} 
+//pub async fn str_verify(token: &str, key: &Hmac<Sha256>, db: &Arc<tokio_postgres::Client>)->Result<TokenData>{
+//    let v =  verify_token(&token, &key)?;
+//    if db.query("SELECT id FROM account WHERE blockeduntil>NOW() AND id=$1", &[&v.id]).await.unwrap().len()>0{
+//        anyhow::bail!("user blocked")
+//    };
+//    let now = time::SystemTime::now().duration_since(time::UNIX_EPOCH).unwrap().as_secs(); 
+//    if v.iat+DURATION<=now{
+//        anyhow::bail!("token expired")
+//    }
+//    return Ok(v);
+//} 
+//
+//pub async fn pure_verify(data: &JSON, key: &Hmac<Sha256>, db: &Arc<tokio_postgres::Client>)->Result<TokenData>{
+//    let token = data.get("token".into()).ok_or(anyhow::anyhow!("no token"))?;
+//    let v =  verify_token(&token, &key)?;
+//    if db.query("SELECT id FROM account WHERE blockeduntil>NOW() AND id=$1", &[&v.id]).await.unwrap().len()>0{
+//        anyhow::bail!("user blocked")
+//    };
+//    let now = time::SystemTime::now().duration_since(time::UNIX_EPOCH).unwrap().as_secs(); 
+//    if v.iat+DURATION<=now{
+//        anyhow::bail!("token expired")
+//    }
+//    return Ok(v);
+//} 
 
 
 const NULLABLE_IDENT: [&str; 2] = ["phone","address"];

@@ -4,8 +4,6 @@ import Button from './../components/Button';
 import Card from './../components/Card';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-// import express from 'express';
-import cors from 'cors';
 
 const CardRegister = ({ inLoginPage, onStateChange }) => {
     const { register, handleSubmit } = useForm();
