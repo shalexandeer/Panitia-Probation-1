@@ -16,7 +16,10 @@
     padding: 0;
     box-sizing: border-box;
 }
-#input-form-style input, select{
+.btn{
+    text-transform: none !important;
+}
+#input-form-style input, select, textarea{
     border: 0.5px solid #dbdbdb;
     padding: 12px 16px;
     border-radius: 8px;

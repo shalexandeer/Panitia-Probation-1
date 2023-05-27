@@ -1,13 +1,13 @@
 import './App.css';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Auth from './pages/Auth';
-import Home from './pages/Home';
 import FundingForm from './pages/FundingForm';
 import Forum from './pages/Forum';
 import Consultation from './pages/Consultation';
 import Navbar from './components/Navbar';
 import Payment from './pages/Payment';
 import Chat from './pages/Chat';
+import Home from './pages/Homepage/Home';
 
 function App() {
     const location = useLocation().pathname;
