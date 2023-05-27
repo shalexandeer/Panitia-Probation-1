@@ -52,10 +52,9 @@ const AllDiscussion = ({}) => {
     };
 
     return (
-        <div className='flex flex-col gap-3'>
+        <div className='flex flex-col gap-3 p-5'>
             <div className='flex justify-between'>
                 <Card.Title text={pageAddQuestion ? 'Add Question' : `All Discussion`} />
-
                 <Button className={'btn btn-primary'} onClick={handleSwitchAddQuestion}>
                     {!pageAddQuestion ? '+ Ask Question' : '< Back'}
                 </Button>
@@ -94,7 +93,7 @@ const AllQuestion = ({ filterActive, handleActiveFilter }) => {
 
 const DiscussingNowList = () => {
     return (
-        <Card className={'border rounded-[1rem_!important] p-5 flex flex-col gap-6'}>
+        <Card className={'border rounded-[1rem_!important] p-5 flex flex-col gap-6 max-sm:border-none'}>
             <Card.Title text='Discussing Now' />
             <Card.Body className={'flex flex-col gap-5'}>
                 <ForumCardDiscussingNow />
@@ -160,9 +159,9 @@ const DiscussionCardLayout = () => {
 const DiscussionCard = () => {
     return (
         <Card className={'flex p-12'}>
-            <Card.Body className={'flex gap-4'}>
-                <div className='h-[168px] w-full max-w-[168px] rounded-2xl bg-slate-300'></div>
-                <div className='h-full flex flex-col justify-between pt-3 pb-3'>
+            <Card.Body className={'flex flex-col md:flex-row gap-4'}>
+                <div className='h-[200px] lg:h-[168px] w-full lg:max-w-[168px] rounded-2xl bg-slate-300'></div>
+                <div className='lg:h-full flex flex-col max-lg:gap-4 lg:justify-between pt-3 pb-3'>
                     <ForumTopicTitle className={'text-2xl font-semibold leading-8'} />
                     <ForumDescription className={`text-base leading-7`} />
                     <CountAnswer />
