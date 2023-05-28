@@ -35,7 +35,7 @@ Returns:
 [GET]
 /list_forums
 Returns:
-    200:{"list":[int,string,string][]) #id,title,tscreate (YYYY:MM:DD HH:MM:SS+ZZ) contoh: 2023-05-20 19:07:48+07
+    200:{"list":[int,string,string][]} #id,title,tscreate (YYYY:MM:DD HH:MM:SS+ZZ) contoh: 2023-05-20 19:07:48+07
     
 [POST]
 /write_forum

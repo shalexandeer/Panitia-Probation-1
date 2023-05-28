@@ -434,7 +434,12 @@ pub async fn load_konsultasi(
             let message: String = x.get("message");
             let is_client: bool = x.get("is_client");
             let tssent: String = x.get("tssent");
-            ConsultationMessage{id, message, is_client, tssent}
+            ConsultationMessage {
+                id,
+                message,
+                is_client,
+                tssent,
+            }
         })
         .collect();
 
@@ -505,15 +510,17 @@ pub async fn write_konsultasi(
     let mut chat = chats.lock().await;
     chat.0.get_mut(&param.konsultasi_id).map(|x| {
         x.0.retain(|&k, v| {
-            if k == token.id {
-                return true;
-            }
-            v.send(Message {
+            let tmp = v.send(Message {
                 user_id: token.id,
                 message: param.message.clone(),
                 timestamptz: String::from("NOT_IMPLEMENTED"),
-            })
-            .is_ok()
+            });
+            println!(
+                "user: {k} | message = {} | ok = {}",
+                param.message.clone(),
+                tmp.is_ok()
+            );
+            return tmp.is_ok();
         })
     });
     //if let Some(Some(v)) = x{
@@ -561,24 +568,35 @@ pub async fn live_chat(
     let mut receiver = UnboundedReceiverStream::new(receiver);
     let mut id = 0;
     let bearer: String = if let Some(x) = query.get("token".into()) {
+        println!("token ok");
         x.clone()
     } else {
         String::from("invalid")
     };
     if let Ok(x) = flash_bearer_verify(&bearer, &flash_key, &db).await {
+        println!("bearer verified");
         id = x.id;
         let mut tmp = chats.lock().await;
         if let None = tmp.0.get(&konsultasi_id) {
+            println!("new chat");
             tmp.0.insert(konsultasi_id, UserSender(BTreeMap::new()));
+        } else {
+            println!("chat already exists");
         }
-        if let None = tmp.0.get(&konsultasi_id).unwrap().0.get(&id) {
-            tmp.0.get_mut(&konsultasi_id).unwrap().0.insert(id, sender);
-        };
+        
+        if let Some(x) = tmp.0.get_mut(&konsultasi_id).unwrap().0.insert(id, sender) {
+            println!("closing old connection");
+            x.closed().await
+        } else {
+            println!("no old connection");
+        }
     } else {
+        println!("unverified {bearer}...closing!");
         receiver.close();
     };
 
     let stream = receiver.map(move |msg| {
+        println!("returning stream with message = {}", msg.message);
         return Ok::<_, Infallible>(
             Event::default()
                 .event("receive")
