@@ -8,6 +8,7 @@ args = parser.parse_args()
 
 # self.token = ""
 URL = "http://127.0.0.1:3030"
+TARGET_ID = 1
 USERNAME = "Konsultan_joko"
 EMAIL = "joko@gmail.com"
 PHONE = "08163781236"
@@ -52,6 +53,7 @@ class User:
         message=MESSAGE,
         konsultasi_id=KONSULTASI_ID,
         consultant=CONSULTANT,
+        target_id=TARGET_ID,
     ) -> None:
         self.username = username
         self.email = email
@@ -69,6 +71,21 @@ class User:
         self.message = message
         self.konsultasi_id = konsultasi_id
         self.consultant = consultant
+        self.target_id = target_id
+
+    def pub_info(self):
+        return R.get(
+            URL+f"/pub_info?user_id={self.target_id}",
+        )
+
+    def self_info(self):
+        return R.get(
+            URL+"/self_info",
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": "Bearer "+self.token
+            }.copy(),
+        )
 
     def register(self):
         return R.post(

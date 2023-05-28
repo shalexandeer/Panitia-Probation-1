@@ -55,12 +55,12 @@ pub async fn list_konsultan(db: Arc<tokio_postgres::Client>) -> warp::http::Resp
         .unwrap()
         .iter()
         .map(|x| {
-            let id = x.try_get::<&str, i64>("id").unwrap();
-            let name = x.try_get::<&str, String>("name").unwrap();
-            let email = x.try_get::<&str, String>("email").unwrap();
-            let phone = x.try_get::<&str, String>("phone").unwrap();
-            let avataruri = x.try_get::<&str, String>("avataruri").unwrap();
-            let tsjoin = x.try_get::<&str, String>("tsjoin").unwrap();
+            let id: i64 = x.get("id");
+            let name: String = x.get("name");
+            let email: String = x.get("email");
+            let phone: String = x.get("phone");
+            let avataruri: String = x.get("avataruri");
+            let tsjoin: String = x.get("tsjoin");
             (id, name, email, phone, avataruri, tsjoin)
         })
         .collect();
@@ -110,13 +110,13 @@ pub async fn list_konsultasi(
         .unwrap()
         .iter()
         .map(|x| {
-            let id = x.try_get::<&str, i64>("id").unwrap();
-            let title = x.try_get::<&str, String>("title").unwrap();
-            let name = x.try_get::<&str, String>("name").unwrap();
-            let nominal = x.try_get::<&str, i64>("nominal").unwrap();
-            let tsc = x.try_get::<&str, String>("tsc").unwrap();
-            let tsac = x.try_get::<&str, String>("tsac").unwrap();
-            let tsd = x.try_get::<&str, String>("tsd").unwrap();
+            let id: i64 = x.get("id");
+            let title: String = x.get("title");
+            let name: String = x.get("name");
+            let nominal: i64 = x.get("nominal");
+            let tsc: String = x.get("tsc");
+            let tsac: String = x.get("tsac");
+            let tsd: String = x.get("tsd");
             (id, title, name, nominal, tsc, tsac, tsd)
         })
         .collect();
@@ -254,14 +254,14 @@ pub async fn list_consultationoffer(
         "SELECT id,account,category,title,description,nominal,duration,tscreate::TIMESTAMPTZ(0)::TEXT from consultationoffer", 
     &[]).await{
         let tmp: Vec<_> = rows.iter().map(|r|{
-            let id = r.try_get::<&str,i64>("id").unwrap();
-            let account = r.try_get::<&str,i64>("account").unwrap();
-            let category = r.try_get::<&str,&str>("category").unwrap();
-            let title = r.try_get::<&str,&str>("title").unwrap();
-            let description = r.try_get::<&str,&str>("description").unwrap();
-            let nominal = r.try_get::<&str,i64>("nominal").unwrap();
-            let duration = r.try_get::<&str,i64>("duration").unwrap();
-            let tscreate = r.try_get::<&str,&str>("tscreate").unwrap();
+            let id: i64 = r.get("id");
+            let account: i64 = r.get("account");
+            let category: String = r.get("category");
+            let title: String = r.get("title");
+            let description: String = r.get("description");
+            let nominal: i64 = r.get("nominal");
+            let duration: i64 = r.get("duration");
+            let tscreate: String = r.get("tscreate");
             (id,account,category,title,description,nominal,duration,tscreate)
         }).collect();
         return r200!{
@@ -401,10 +401,10 @@ pub async fn load_konsultasi(
         .unwrap()
         .iter()
         .map(|x| {
-            let id = x.try_get::<&str, i64>("id").unwrap();
-            let message = x.try_get::<&str, String>("message").unwrap();
-            let is_client = x.try_get::<&str, bool>("is_client").unwrap();
-            let tssent = x.try_get::<&str, String>("tssent").unwrap();
+            let id: i64 = x.get("id");
+            let message: String = x.get("message");
+            let is_client: bool = x.get("is_client");
+            let tssent: String = x.get("tssent");
             (id, message, is_client, tssent)
         })
         .collect();
@@ -588,17 +588,17 @@ pub async fn flash_bearer_verify_complete(token: &str, key: &Hmac<Sha256>, db: &
     "#, &[&v.id]).await.unwrap();
     if let [first, ..] = &tmp[..]{
         let class = first.try_get::<&str,&str>("class").map(UserClass::from_str).unwrap().unwrap();
-        let isadmin = first.try_get::<&str,bool>("isadmin").unwrap();
-        let name = first.try_get::<&str,String>("name").unwrap();
-        let tsjoin = first.try_get::<&str,String>("tsjoin").unwrap();
-        let avataruri = first.try_get::<&str,String>("avataruri").unwrap();
-        let blockeduntil = first.try_get::<&str,String>("blockeduntil").unwrap();
-        let email = first.try_get::<&str,String>("email").unwrap();
-        let phone = first.try_get::<&str,String>("phone").unwrap();
-        let address = first.try_get::<&str,String>("address").unwrap();
-        let domain = first.try_get::<&str,String>("domain").unwrap();
-        let fundingform = first.try_get::<&str,String>("fundingform").unwrap();
-        let objective = first.try_get::<&str,String>("objective").unwrap();
+        let isadmin: bool = first.get("isadmin");
+        let name: String = first.get("name");
+        let tsjoin: String = first.get("tsjoin");
+        let avataruri: String = first.get("avataruri");
+        let blockeduntil: String = first.get("blockeduntil");
+        let email: String = first.get("email");
+        let phone: String = first.get("phone");
+        let address: String = first.get("address");
+        let domain: String = first.get("domain");
+        let fundingform: String = first.get("fundingform");
+        let objective: String = first.get("objective");
         let acd = AccountData{
             id: v.id,
             class,

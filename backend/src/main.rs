@@ -63,6 +63,19 @@ async fn main() -> Result<()>{
         .and(with_state(db_cli.clone()))        
         .then(account::register);
 
+    let pub_info = warp::path("pub_info")
+        .and(warp::get())
+        .and(warp::query::<account::InfoParam>())
+        .and(with_state(db_cli.clone()))        
+        .then(account::pub_info);
+
+    let self_info = warp::path("self_info")
+        .and(warp::get())
+        .and(warp::header::<String>("Authorization"))
+        .and(with_state(key.clone()))
+        .and(with_state(db_cli.clone()))        
+        .then(account::self_info);
+
     let login = warp::path("login")
         .and(warp::post())
         .and(warp::body::json())
@@ -171,50 +184,14 @@ async fn main() -> Result<()>{
         .and(with_state(flash_key.clone()))
         .and(with_state(db_cli.clone())) 
         .and(with_state(live_konsultasi.clone()))
-        .then(konsultasi::live_chat)
-//        .map(move |
-//    bearer: String,
-//    konsultasi_id: i64,
-//    key: Hmac<Sha256>,
-//    db: Arc<tokio_postgres::Client>,
-//    chats: Arc<Mutex<Chats>>
-//            |async{
-//            let stream = konsultasi::live_chat(bearer,konsultasi_id,key,db,chats).await;
-//            warp::sse::reply(warp::sse::keep_alive().stream(stream))
-//            }
-//        )
-    ;
-
-    let cors = warp::cors()
-        .allow_any_origin()
-        .allow_methods(vec!["GET", "POST", "DELETE"])
-        .allow_headers(
-            vec![
-            "User-Agent",
-            "Sec-Fetch-Mode",
-            "Referer",
-            "Origin",
-            "Access-Control-Request-Method",
-            "Access-Control-Request-Headers",
-            "Content-Type",
-            "Authorization",
-            "user-agent",
-            "sec-fetch-mode",
-            "referer",
-            "origin",
-            "access-control-request-method",
-            "access-control-request-headers",
-            "content-type",
-            "authorization",
-            ]
-        )
-        .allow_credentials(true)
-    ;
+        .then(konsultasi::live_chat) ;
 
     let routes = hello
         .or(register)
         .or(login)
         .or(delete)
+        .or(pub_info)
+        .or(self_info)
         .or(list_forums)
         .or(write_forum)
         .or(load_forum)
@@ -228,8 +205,6 @@ async fn main() -> Result<()>{
         .or(write_konsultasi)
         .or(konsultasi_chat)
         .or(konsultasi_flash_auth)
-        
-        //.with(cors)
     ;
 
 
