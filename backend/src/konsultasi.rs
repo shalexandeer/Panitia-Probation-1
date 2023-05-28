@@ -66,6 +66,7 @@ pub struct Konsultasi {
     id: i64,
     title: String,
     name: String,
+    konsultan_id: i64,
     nominal: i64,
     tsc: String,
     tsac: String,
@@ -89,6 +90,7 @@ pub async fn list_konsultasi(
             r#"
         SELECT 
             consultation.id,
+            consultation.consultant as konsultan_id,
             title,
             c.name as name,
             nominal,
@@ -118,9 +120,11 @@ pub async fn list_konsultasi(
             let nominal: i64 = x.get("nominal");
             let tsc: String = x.get("tsc");
             let tsac: String = x.get("tsac");
+            let konsultan_id: i64 = x.get("konsultan_id");
             let tsd: String = x.get("tsd");
             Konsultasi {
                 id,
+                konsultan_id,
                 title,
                 name,
                 nominal,
