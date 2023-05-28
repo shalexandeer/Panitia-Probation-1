@@ -1,9 +1,14 @@
+import { IconLogout2 } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, NavLink, useLocation } from 'react-router-dom';
+import { Message2 } from 'tabler-icons-react';
 
 const Navbar = ({ children, className }) => {
     //get window size
     const [sizeWindow, setSizeWindow] = useState();
+
+    //handle user class's username
+    const [userClassName, setUserClassName] = useState(localStorage.getItem('name'));
 
     useEffect(() => {
         const handleResize = () => {
@@ -15,6 +20,14 @@ const Navbar = ({ children, className }) => {
 
     //get page pathname
     const path = location.pathname;
+
+    const handleLogout = (e) => {
+        e.preventDefault();
+        console.log('successfully logout');
+        localStorage.clear();
+        window.location.reload(false);
+    };
+
     return (
         <>
             <div className='drawer drawer-end'>
@@ -49,11 +62,42 @@ const Navbar = ({ children, className }) => {
                                 <div className={`flex-none hidden ${location.pathname == '/auth' ? 'hidden' : 'lg:block'}`}>
                                     {localStorage.getItem('token') === null ? (
                                         <Link to='/auth'>
-                                            {' '}
                                             <button className='btn btn-xs sm:btn-sm md:btn-md lg:btn-lg bg-[#1496FF] border-none text-white'>Login</button>
                                         </Link>
                                     ) : (
-                                        <h1>sudah login bro</h1>
+                                        <div>
+                                            <div className='dropdown dropdown-end'>
+                                                <label tabIndex={0} className=''>
+                                                    <div className='flex flex-row items-center gap-3'>
+                                                        <div className='avatar'>
+                                                            <div className='w-12 h-auto rounded-full p[] '>
+                                                                <img src='/public/img/potrait.jpg' />
+                                                            </div>
+                                                        </div>
+                                                        <h1>Halo, {userClassName}</h1>
+                                                    </div>
+                                                </label>
+                                                <ul tabIndex={0} className='border dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52'>
+                                                    <li>
+                                                        <Link to={'/chat'}>
+                                                            <Message2 /> Chat Message
+                                                        </Link>
+                                                    </li>
+                                                    <div className='divider m-[0px_!important]'></div>
+                                                    <li>
+                                                        <NavLink
+                                                            to={{
+                                                                pathname: '/',
+                                                                state: { from: path }
+                                                            }}
+                                                            className='text-red-600'
+                                                            onClick={handleLogout}>
+                                                            <IconLogout2 /> Logout
+                                                        </NavLink>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
                                 <div className='flex-none lg:hidden'>
@@ -86,6 +130,21 @@ const Navbar = ({ children, className }) => {
                         <li className={`${path == '/forum' && 'activeLink'}`}>
                             <Link to='/forum'>Forum</Link>
                         </li>
+                        {localStorage.getItem('token') === null ? (
+                            <Link to='/auth'>
+                                {' '}
+                                <button className='btn btn-xs sm:btn-sm md:btn-md lg:btn-lg w-full mt-5 bg-[#1496FF] border-none text-white'>Login</button>
+                            </Link>
+                        ) : (
+                            <div className='flex flex-row items-center gap-3 p-4'>
+                                <div className='avatar'>
+                                    <div className='w-12 h-auto rounded-full p[] '>
+                                        <img src='/public/img/potrait.jpg' />
+                                    </div>
+                                </div>
+                                <h1>sudah login bro</h1>
+                            </div>
+                        )}
                     </ul>
                 </div>
             </div>

@@ -1,29 +1,37 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
 import ClassUserHome from './ClassUserHome';
 import ClassInvestorHome from './ClassInvestorHome';
+import axios from 'axios';
 
 const Home = () => {
-    const [userClass, setUserClass] = useState('I');
+    const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('user')) || {});
+
+    useEffect(() => {
+        axios
+            .get('/api/self_info', {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+            .then((resp) => {
+                localStorage.setItem('user', JSON.stringify(resp.data));
+            });
+    }, []);
+
+    // {}['asdqasd'] = undefined
+    // null['class']
 
     return (
         <div className='flex flex-col'>
             {/* landing page */}
 
-            <div className={`grid place-items-center pb-12 pl-5 pr-5 sm:pl-6 sm:pr-6 ${userClass == 'U' && 'class-user-bg'} `} id='home-landing-page'>
-                <div className={`container mx-auto flex flex-col-reverse gap-10 lg:gap-0 ${userClass == 'I' ? '' : 'lg:pt-12'} lg:grid lg:grid-cols-2`}>
-                    <div className={`flex flex-col justify-center items-center lg:items-start gap-6 lg:gap-7 lg:pt-12  lg:pb-12`}>
-                        {userClass == 'all' && (
+            <div className={`grid place-items-center pb-12 pl-5 pr-5 sm:pl-6 sm:pr-6 ${userInfo['class'] == 'U' && 'class-user-bg'} `} id='home-landing-page'>
+                <div className={`container mx-auto flex flex-col-reverse gap-10 lg:gap-0 ${userInfo['class'] == 'I' ? '' : 'lg:pt-12'} lg:grid lg:grid-cols-2`}>
+                    <div className={`flex flex-col justify-center items-center lg:items-start gap-6 lg:gap-7 lg:pt-12  lg:pb-12 `}>
+                        {userInfo['class'] === undefined && (
                             <>
-                                <div className='bg-slate-700'>
-                                    <div className='lds-ring'>
-                                        <div></div>
-                                        <div></div>
-                                        <div></div>
-                                        <div></div>
-                                    </div>
-                                </div>
                                 <h1 className='text-center lg:text-start leading-10 md:leading-[3rem] xl:leading-[5rem] home-landing-heading font-semibold'>
                                     Welcome to <br className='hidden lg:block' /> <span className='text-primary'>Fundify</span> Consult Your <br /> <span className='text-primary'>Business</span> Now!
                                 </h1>
@@ -34,8 +42,8 @@ const Home = () => {
                                 </div>
                             </>
                         )}
-                        {userClass == 'I' && <ClassInvestorHome.InvestorLanding />}
-                        {userClass == 'U' && (
+                        {userInfo['class'] == 'I' && <ClassInvestorHome.InvestorLanding />}
+                        {userInfo['class'] == 'U' && (
                             <>
                                 <h1 className='pt-12  lg:p-0  text-center lg:text-start leading-10 md:leading-[3rem] xl:leading-[5rem] home-landing-heading font-semibold'>
                                     Find The Best <br className='hidden lg:block' /> Business Consultant <br /> In <span className='text-primary'>Fundify</span>
@@ -50,21 +58,26 @@ const Home = () => {
                             </>
                         )}
                     </div>
-                    {userClass == 'all' && (
+                    {userInfo['class'] == undefined && (
                         <div id='image-landing-user'>
                             <img src='./public/img/image-landing-alluser.svg' className='w-full h-auto' alt='' />
                         </div>
                     )}
-                    {userClass == 'I' && (
+                    {userInfo['class'] == 'I' && (
                         <div id='image-landing-user'>
                             <img src='./public/img/home-class-investor-bg.svg' className='w-full h-auto' alt='' />
                         </div>
                     )}
                 </div>
             </div>
-            {userClass == 'all' && (
+
+            {/*end of landing page */}
+
+            {/* about us for all user class */}
+
+            {userInfo['class'] === undefined && (
                 <>
-                    <div id='aboutusbg' className={`pl-5 pr-5 ${userClass == 'all' ? 'flex' : 'hidden'}`}>
+                    <div id='aboutusbg' className={`pl-5 pr-5 ${userInfo['class'] == 'all' ? 'flex' : 'hidden'}`}>
                         <AboutUs text1='About us' text2='Provide various services to help grow your business your business' />
                     </div>
                     <div id='commercial-landing' className='pl-5 pr-5 sm:pl-6 sm:pr-6 '>
@@ -72,12 +85,21 @@ const Home = () => {
                     </div>
                 </>
             )}
-            {userClass == 'U' && <ClassUserHome.Benefit />}
+            {/* end about us for all user class */}
+
+            {/* benefit section for UMKM user class */}
+            {userInfo['class'] == 'U' && <ClassUserHome.Benefit />}
             <div id='consultant-home' className='pl-5 pr-5 sm:pl-6 sm:pr-6 '>
                 <ConsultantSection text1='Our Best Consultant' text2='Consultants at Fundify are experienced and good problem solvers.' />
             </div>
-            {userClass == 'U' && <ClassUserHome.ListConsultanSectionHome text1={'Find other consultant recommendations'} text2={'Fundify consultants are experts in their fields who can help grow your business.'} />}
-            {userClass == 'all' && (
+            {/* end of benefit section for UMKM user class */}
+
+            {/* lisc consultant for UMKM user class */}
+            {userInfo['class'] == 'U' && <ClassUserHome.ListConsultanSectionHome text1={'Find other consultant recommendations'} text2={'Fundify consultants are experts in their fields who can help grow your business.'} />}
+            {/*end lisc consultant for UMKM user class */}
+
+            {/* banner get investo for all user class */}
+            {userInfo['class'] == 'all' && (
                 <>
                     <div id='banner-get-investor' className='pl-5 pr-5 sm:pl-6 sm:pr-6 lg:h-[911px] '>
                         <BannerGetInvestor />
@@ -87,6 +109,7 @@ const Home = () => {
                     </div>
                 </>
             )}
+            {/* end of banner get investo for all user class */}
         </div>
     );
 };
@@ -246,30 +269,8 @@ const ForumSectionCard = ({ url = './public/img/counseling.svg', featureName = '
     );
 };
 
-const HomeUserAllUserClass = () => {
-    return;
-};
-
 const HeadingHome = ({ text, className }) => {
     return <h1 className={`${className}`}>{text}</h1>;
-};
-
-const CarouselMobile = () => {
-    return (
-        <div className='carousel w-full'>
-            <div id='slide1' className='carousel-item relative '>
-                <ConsultantCard featureName='Counseling' description='Need a solution for your business? Come on, tell a story!' />
-                <div className='absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2'>
-                    <a href='#slide4' className='btn btn-circle'>
-                        ❮
-                    </a>
-                    <a href='#slide2' className='btn btn-circle'>
-                        ❯
-                    </a>
-                </div>
-            </div>
-        </div>
-    );
 };
 
 Home.ConsultantCard = ConsultantCard;

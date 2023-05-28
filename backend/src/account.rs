@@ -4,14 +4,11 @@ use hmac::Hmac;
 use rand;
 use serde::{Deserialize, Deserializer};
 use sha2::Sha256;
-use std::ops::Deref;
 use std::sync::Arc;
-use tokio_postgres::types::ToSql;
 type JSON = std::collections::hash_map::HashMap<String, String>;
 use crate::utils::response::*;
 use crate::utils::token::*;
 use std::time;
-use tokio::sync::{Mutex, MutexGuard};
 const ERR_FIELD_REG: &str = "need fields 'email', 'phone', 'typ', 'username', and 'password'";
 pub async fn register(
     mut data: JSON,
@@ -125,13 +122,6 @@ pub async fn pub_info(
     {
         Ok(v) => {
             if let [first, ..] = &v[..] {
-                //let id: i64 = first.get("id");
-                //let class: i64 = first.get("id");
-                //let isadmin: i64 = first.get("id");
-                //let name: i64 = first.get("id");
-                //let tsjoin: i64 = first.get("id");
-                //let id: i64 = first.get("id");
-
                 let id: i64 = first.get("id");
                 let class: String = first.get("class");
                 let isadmin: bool = first.get("isadmin");
@@ -451,7 +441,6 @@ pub async fn bearer_verify(
         token
     };
     let v = verify_token(&token, &key)?;
-    //class,isadmin,name,tsjoin,avataruri,blockeduntil,email,phone,address,domain,fundingform,objective
 
     let tmp = db
         .query(
@@ -481,114 +470,4 @@ pub async fn bearer_verify(
     };
 }
 
-//pub async fn str_verify(token: &str, key: &Hmac<Sha256>, db: &Arc<tokio_postgres::Client>)->Result<TokenData>{
-//    let v =  verify_token(&token, &key)?;
-//    if db.query("SELECT id FROM account WHERE blockeduntil>NOW() AND id=$1", &[&v.id]).await.unwrap().len()>0{
-//        anyhow::bail!("user blocked")
-//    };
-//    let now = time::SystemTime::now().duration_since(time::UNIX_EPOCH).unwrap().as_secs();
-//    if v.iat+DURATION<=now{
-//        anyhow::bail!("token expired")
-//    }
-//    return Ok(v);
-//}
-//
-//pub async fn pure_verify(data: &JSON, key: &Hmac<Sha256>, db: &Arc<tokio_postgres::Client>)->Result<TokenData>{
-//    let token = data.get("token".into()).ok_or(anyhow::anyhow!("no token"))?;
-//    let v =  verify_token(&token, &key)?;
-//    if db.query("SELECT id FROM account WHERE blockeduntil>NOW() AND id=$1", &[&v.id]).await.unwrap().len()>0{
-//        anyhow::bail!("user blocked")
-//    };
-//    let now = time::SystemTime::now().duration_since(time::UNIX_EPOCH).unwrap().as_secs();
-//    if v.iat+DURATION<=now{
-//        anyhow::bail!("token expired")
-//    }
-//    return Ok(v);
-//}
 
-const NULLABLE_IDENT: [&str; 2] = ["phone", "address"];
-const NULLABLE_NONID: [&str; 2] = ["expertise", "avataruri"];
-
-const NONNULLABLE_IDENT: [&'static str; 1] = ["email"];
-const NONNULLABLE_NONID: [&'static str; 1] = ["name"];
-
-//NULLABLE:
-//*phone
-//*address
-//-avataruri
-//-expertise
-
-//NONNULLABLE:
-//*email
-//-name
-
-//
-// Any value that is present is considered Some value, including null.
-fn deserialize_some<'de, T, D>(deserializer: D) -> Result<Option<T>, D::Error>
-where
-    T: Deserialize<'de>,
-    D: Deserializer<'de>,
-{
-    Deserialize::deserialize(deserializer).map(Some)
-}
-
-// #[allow(unused)]
-// #[derive(Deserialize, Debug)]
-// pub struct SafeEditParam{
-//     token: String,
-//     #[serde(default, deserialize_with = "deserialize_some")]
-//     phone: Option<String>,
-//     #[serde(default, deserialize_with = "deserialize_some")]
-//     address: Option<String>,
-//     //#[serde(default, deserialize_with = "deserialize_some")]
-//     //avataruri: Option<String>,
-//     #[serde(default, deserialize_with = "deserialize_some")]
-//     email: Option<String>,
-//     #[serde(default, deserialize_with = "deserialize_some")]
-//     name: Option<String>
-// }
-//
-//
-//
-//
-// //safe edit does not require password,only token, but does not allow
-// //password changes
-// //POST /edit_user data:{name}
-// pub async fn safe_edit(
-//     data: SafeEditParam,
-//     key: Hmac<Sha256>,
-//     db: Arc<tokio_postgres::Client>,
-// ) -> warp::http::Response<String> {
-//     let jwt: TokenData = if let Ok(v) = str_verify(&data.token, &key, &db).await {v} else {
-//         return r401!{
-//             "message" => "failed at validating token",
-//         }
-//     };
-//
-//     //to set phone,address,avaturi,and/or expertise to NULL or delete. do not use this api
-//
-//     let mut curr = 1;
-//     let mut query = "UPDATE account set ".to_string();
-//     let mut params: Vec<Option<&(dyn ToSql+Sync)>> = Vec::new();
-//     let mut p: Vec<
-//     if let Some(x)=data.phone{
-//         query += &format!("phone=COALESCE(${curr},phone)");
-//         curr += 1;
-//         //params.push(Box::new(x));
-//         params.push(data.phone.clone());
-//     }
-//     //token,phone,address,avataruri,email,name
-//     //let params = params.iter()
-//     //        .map(|x| x.as_ref() as &(dyn ToSql + Sync))
-//     //        .collect::<Vec<&(dyn ToSql+Sync)>>();
-//     if db.execute(
-//         &query,
-//         &params[..]
-//
-//     ).await.is_err(){
-//         return r500!{
-//             "message" => "server-side error",
-//         }
-//     };
-//     todo!()
-// }

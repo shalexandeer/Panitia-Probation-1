@@ -23,7 +23,9 @@ extern crate serde_json;
 
 const DURATION: u64 = 60*60*2;
 const FLASH_DURATION: u64 = 5;
+
 static LIVE_CHAT_COUNTER_KONSULTASI: AtomicUsize = AtomicUsize::new(0);
+
 use tokio::sync::mpsc::UnboundedSender;
 
 #[derive(Debug,Clone,Default)]

@@ -69,17 +69,19 @@ const AllDiscussion = ({}) => {
 const AllQuestion = ({ filterActive, handleActiveFilter }) => {
     return (
         <>
-            <div id='count-and-filter' className='flex gap-4 items-center'>
+            <div id='count-and-filter' className='flex flex-col md:flex-row gap-4 items-start md:items-center'>
                 <CountAllQuestion />
-                <Button className={`btn btn-primary ${filterActive !== 'Newest' && 'btn-outline'} `} onClick={handleActiveFilter}>
-                    Newest
-                </Button>
-                <Button className={`btn btn-primary ${filterActive !== 'Popular' && 'btn-outline'} `} onClick={handleActiveFilter}>
-                    Popular
-                </Button>
-                <Button className={`btn btn-primary ${filterActive !== 'Unanswered' && 'btn-outline'} `} onClick={handleActiveFilter}>
-                    Unanswered
-                </Button>
+                <div className='flex gap-4'>
+                    <Button className={`btn btn-primary ${filterActive !== 'Newest' && 'btn-outline'} `} onClick={handleActiveFilter}>
+                        Newest
+                    </Button>
+                    <Button className={`btn btn-primary ${filterActive !== 'Popular' && 'btn-outline'} `} onClick={handleActiveFilter}>
+                        Popular
+                    </Button>
+                    <Button className={`btn btn-primary ${filterActive !== 'Unanswered' && 'btn-outline'} `} onClick={handleActiveFilter}>
+                        Unanswered
+                    </Button>
+                </div>
             </div>
             <Card className={'rounded-[1rem_!important] border '}>
                 <Card.Body>
@@ -115,7 +117,7 @@ const AddQuestion = () => {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div>
-                <div className='flex w-full gap-4 '>
+                <div className='flex flex-col md:flex-row w-full gap-4 '>
                     <div className='h-[70px] w-[70px] bg-slate-500 rounded-full'></div>
                     <div id='form-input-add-question' className='w-full'>
                         <LayoutInputLabel>

@@ -1,8 +1,9 @@
-use futures_util::{stream::iter, Stream, StreamExt};
 use crate::FLASH_DURATION;
-use std::time;
+use futures_util::{stream::iter, Stream, StreamExt};
 use hmac::Hmac;
+use postgres_types::{FromSql, ToSql};
 use sha2::Sha256;
+use std::time;
 use std::{
     collections::{BTreeMap, HashMap},
     convert::Infallible,
@@ -25,25 +26,17 @@ pub struct Message {
     pub message: String,
     pub timestamptz: String,
 }
-//use hyper::body::Bytes;
-//impl Into<Bytes> for Message{
-//    fn into(self) -> Bytes {
-//        let tmp = serde_json::to_string(&self).unwrap();
-//        let tmp2: &str = serde_json::to_string(&self).as_ref().unwrap();
-//        Bytes::from_static(tmp2.as_bytes())
-//    }
-//}
-//
-//impl From<Bytes> for Message{
-//    fn from(value: Bytes) -> Self {
-//        let bytes: &[u8] = &value.to_vec();
-//        let s: &str = std::str::from_utf8(bytes).unwrap();
-//        serde_json::from_str(s).unwrap()
-//    }
-//}
 
+#[derive(Debug, Clone, Deserialize, Serialize, FromSql, ToSql)]
+pub struct Konsultan {
+    id: i64,
+    name: String,
+    email: String,
+    phone: String,
+    avataruri: String,
+    tsjoin: String,
+}
 pub async fn list_konsultan(db: Arc<tokio_postgres::Client>) -> warp::http::Response<String> {
-    //id | class | isadmin | name | passwordhash | tsjoin | avataruri | blockeduntil | email | phone | address | domain | fundingform | objective
     let res0: Vec<_> = db
         .query(
             r#"
@@ -61,13 +54,23 @@ pub async fn list_konsultan(db: Arc<tokio_postgres::Client>) -> warp::http::Resp
             let phone: String = x.get("phone");
             let avataruri: String = x.get("avataruri");
             let tsjoin: String = x.get("tsjoin");
-            (id, name, email, phone, avataruri, tsjoin)
+            Konsultan{id, name, email, phone, avataruri, tsjoin}
         })
         .collect();
 
     return r200! {"list" => &res0[..]};
 }
 
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct Konsultasi {
+    id: i64,
+    title: String,
+    name: String,
+    nominal: i64,
+    tsc: String,
+    tsac: String,
+    tsd: String,
+}
 //[GET]
 pub async fn list_konsultasi(
     bearer: String,
@@ -81,7 +84,6 @@ pub async fn list_konsultasi(
             "message" => "authentication error"
         };
     };
-    // title | client | consultant | nominal | tsconsultation | tsactiveclient | tsactiveconsultant | deadline
     let res0: Vec<_> = db
         .query(
             r#"
@@ -117,7 +119,15 @@ pub async fn list_konsultasi(
             let tsc: String = x.get("tsc");
             let tsac: String = x.get("tsac");
             let tsd: String = x.get("tsd");
-            (id, title, name, nominal, tsc, tsac, tsd)
+            Konsultasi {
+                id,
+                title,
+                name,
+                nominal,
+                tsc,
+                tsac,
+                tsd,
+            }
         })
         .collect();
 
@@ -246,10 +256,20 @@ pub async fn delete_consultationoffer(
     }
 }
 
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ConsultationOffer {
+    id: i64,
+    account: i64,
+    category: String,
+    title: String,
+    description: String,
+    nominal: i64,
+    duration: i64,
+    tscreate: String,
+}
 pub async fn list_consultationoffer(
     db: Arc<tokio_postgres::Client>,
 ) -> warp::http::Response<String> {
-
     if let Ok(rows) = db.query(
         "SELECT id,account,category,title,description,nominal,duration,tscreate::TIMESTAMPTZ(0)::TEXT from consultationoffer", 
     &[]).await{
@@ -262,18 +282,16 @@ pub async fn list_consultationoffer(
             let nominal: i64 = r.get("nominal");
             let duration: i64 = r.get("duration");
             let tscreate: String = r.get("tscreate");
-            (id,account,category,title,description,nominal,duration,tscreate)
+            ConsultationOffer{id,account,category,title,description,nominal,duration,tscreate}
         }).collect();
         return r200!{
             "list" => &tmp[..]
         }
     }
-    return r500!{
+    return r500! {
         "message" => "something went wrong"
-    }
+    };
 }
-
-
 
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AcceptKonsultasiParam {
@@ -357,6 +375,13 @@ pub async fn accept_consultationoffer(
     }
 }
 
+#[derive(Serialize)]
+pub struct ConsultationMessage {
+    id: i64,
+    message: String,
+    is_client: bool,
+    tssent: String,
+}
 //[GET]load consultation
 pub async fn load_konsultasi(
     bearer: String,
@@ -405,7 +430,7 @@ pub async fn load_konsultasi(
             let message: String = x.get("message");
             let is_client: bool = x.get("is_client");
             let tssent: String = x.get("tssent");
-            (id, message, is_client, tssent)
+            ConsultationMessage{id, message, is_client, tssent}
         })
         .collect();
 
@@ -498,9 +523,13 @@ pub async fn flash_auth(
     key: Hmac<Sha256>,
     flash_key: Hmac<Sha256>,
     db: Arc<tokio_postgres::Client>,
-) -> warp::http::Response<String>  {
+) -> warp::http::Response<String> {
     if let Ok(x) = bearer_verify(&bearer, &key, &db).await {
-        let now = time::SystemTime::now().duration_since(time::UNIX_EPOCH).unwrap().as_secs().to_string(); 
+        let now = time::SystemTime::now()
+            .duration_since(time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs()
+            .to_string();
         let mut claims = std::collections::BTreeMap::new();
 
         let id_str = x.id.to_string();
@@ -508,13 +537,12 @@ pub async fn flash_auth(
         claims.insert("id", id_str.as_str());
 
         let token = create_token(&claims, &flash_key);
-        return r200!{"token" => token};
-    } 
-    r401!{
+        return r200! {"token" => token};
+    }
+    r401! {
         "message" => "failed to authenticate",
     }
 }
-
 
 use crate::UserSender;
 use tokio::sync::mpsc::*;
@@ -528,7 +556,9 @@ pub async fn live_chat(
     let (sender, receiver) = unbounded_channel::<konsultasi::Message>();
     let mut receiver = UnboundedReceiverStream::new(receiver);
     let mut id = 0;
-    let bearer: String = if let Some(x)=query.get("token".into()){x.clone()}else{
+    let bearer: String = if let Some(x) = query.get("token".into()) {
+        x.clone()
+    } else {
         String::from("invalid")
     };
     if let Ok(x) = flash_bearer_verify(&bearer, &flash_key, &db).await {
@@ -554,19 +584,26 @@ pub async fn live_chat(
     warp::sse::reply(warp::sse::keep_alive().stream(stream))
 }
 
-
-use anyhow::Result;
-use crate::utils::token::*;
 use crate::account::AccountData;
+use crate::utils::token::*;
+use anyhow::Result;
 /// flash version of `bearer_verify_complete`
-pub async fn flash_bearer_verify_complete(token: &str, key: &Hmac<Sha256>, db: &Arc<tokio_postgres::Client>)->Result<(TokenData,AccountData)>{
-    let token = if let Some(t) = token.strip_prefix("Bearer "){t} else {
+pub async fn flash_bearer_verify_complete(
+    token: &str,
+    key: &Hmac<Sha256>,
+    db: &Arc<tokio_postgres::Client>,
+) -> Result<(TokenData, AccountData)> {
+    let token = if let Some(t) = token.strip_prefix("Bearer ") {
+        t
+    } else {
         token
     };
     let v = verify_token(&token, &key)?;
     //class,isadmin,name,tsjoin,avataruri,blockeduntil,email,phone,address,domain,fundingform,objective
 
-    let tmp = db.query(r#"
+    let tmp = db
+        .query(
+            r#"
     SELECT 
         id,
         class,
@@ -585,9 +622,17 @@ pub async fn flash_bearer_verify_complete(token: &str, key: &Hmac<Sha256>, db: &
         account 
     WHERE 
         blockeduntil<=NOW() AND id=$1
-    "#, &[&v.id]).await.unwrap();
-    if let [first, ..] = &tmp[..]{
-        let class = first.try_get::<&str,&str>("class").map(UserClass::from_str).unwrap().unwrap();
+    "#,
+            &[&v.id],
+        )
+        .await
+        .unwrap();
+    if let [first, ..] = &tmp[..] {
+        let class = first
+            .try_get::<&str, &str>("class")
+            .map(UserClass::from_str)
+            .unwrap()
+            .unwrap();
         let isadmin: bool = first.get("isadmin");
         let name: String = first.get("name");
         let tsjoin: String = first.get("tsjoin");
@@ -599,7 +644,7 @@ pub async fn flash_bearer_verify_complete(token: &str, key: &Hmac<Sha256>, db: &
         let domain: String = first.get("domain");
         let fundingform: String = first.get("fundingform");
         let objective: String = first.get("objective");
-        let acd = AccountData{
+        let acd = AccountData {
             id: v.id,
             class,
             isadmin,
@@ -614,40 +659,57 @@ pub async fn flash_bearer_verify_complete(token: &str, key: &Hmac<Sha256>, db: &
             fundingform,
             objective,
         };
-        let now = time::SystemTime::now().duration_since(time::UNIX_EPOCH).unwrap().as_secs(); 
-        if v.iat+FLASH_DURATION<=now{
+        let now = time::SystemTime::now()
+            .duration_since(time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs();
+        if v.iat + FLASH_DURATION <= now {
             anyhow::bail!("token expired")
         }
-        return Ok((v,acd));
+        return Ok((v, acd));
     } else {
         anyhow::bail!("user blocked")
     };
-} 
+}
 
 /// flash version of `bearer_verify`
-pub async fn flash_bearer_verify(token: &str, key: &Hmac<Sha256>, db: &Arc<tokio_postgres::Client>)->Result<TokenData>{
-    let token = if let Some(t) = token.strip_prefix("Bearer "){t} else {
+pub async fn flash_bearer_verify(
+    token: &str,
+    key: &Hmac<Sha256>,
+    db: &Arc<tokio_postgres::Client>,
+) -> Result<TokenData> {
+    let token = if let Some(t) = token.strip_prefix("Bearer ") {
+        t
+    } else {
         token
     };
     let v = verify_token(&token, &key)?;
     //class,isadmin,name,tsjoin,avataruri,blockeduntil,email,phone,address,domain,fundingform,objective
 
-    let tmp = db.query(r#"
+    let tmp = db
+        .query(
+            r#"
     SELECT 
         id
     FROM 
         account 
     WHERE 
         blockeduntil<=NOW() AND id=$1
-    "#, &[&v.id]).await.unwrap();
-    if let [_, ..] = &tmp[..]{
-        let now = time::SystemTime::now().duration_since(time::UNIX_EPOCH).unwrap().as_secs(); 
-        if v.iat+FLASH_DURATION<=now{
+    "#,
+            &[&v.id],
+        )
+        .await
+        .unwrap();
+    if let [_, ..] = &tmp[..] {
+        let now = time::SystemTime::now()
+            .duration_since(time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs();
+        if v.iat + FLASH_DURATION <= now {
             anyhow::bail!("token expired")
         }
         return Ok(v);
     } else {
         anyhow::bail!("user blocked")
     };
-} 
-
+}
