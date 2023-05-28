@@ -194,3 +194,13 @@
     }
 }
   
+
+.card-modal-consultation{
+    font-size: clamp(1.625rem, 1.2913rem + 1.4239vw, 3rem); 
+    font-weight: 600;
+    line-height: 120%;
+}
+
+.card-modal-consultation-category{
+    font-size: clamp(1rem, 0.8786rem + 0.5178vw, 1.5rem);
+}

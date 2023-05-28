@@ -2,15 +2,18 @@ import { useState } from 'react';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
 import ClassUserHome from './ClassUserHome';
+import ClassInvestorHome from './ClassInvestorHome';
 
 const Home = () => {
-    const [userClass, setUserClass] = useState('all');
+    const [userClass, setUserClass] = useState('I');
 
     return (
         <div className='flex flex-col'>
+            {/* landing page */}
+
             <div className={`grid place-items-center pb-12 pl-5 pr-5 sm:pl-6 sm:pr-6 ${userClass == 'U' && 'class-user-bg'} `} id='home-landing-page'>
-                <div className='container mx-auto flex flex-col-reverse gap-10 lg:gap-0 lg:pt-12 lg:grid lg:grid-cols-2'>
-                    <div className='flex flex-col justify-center items-center lg:items-start gap-6 lg:gap-7 lg:pt-12 lg:pb-12'>
+                <div className={`container mx-auto flex flex-col-reverse gap-10 lg:gap-0 ${userClass == 'I' ? '' : 'lg:pt-12'} lg:grid lg:grid-cols-2`}>
+                    <div className={`flex flex-col justify-center items-center lg:items-start gap-6 lg:gap-7 lg:pt-12  lg:pb-12`}>
                         {userClass == 'all' && (
                             <>
                                 <div className='bg-slate-700'>
@@ -31,6 +34,7 @@ const Home = () => {
                                 </div>
                             </>
                         )}
+                        {userClass == 'I' && <ClassInvestorHome.InvestorLanding />}
                         {userClass == 'U' && (
                             <>
                                 <h1 className='pt-12  lg:p-0  text-center lg:text-start leading-10 md:leading-[3rem] xl:leading-[5rem] home-landing-heading font-semibold'>
@@ -49,6 +53,11 @@ const Home = () => {
                     {userClass == 'all' && (
                         <div id='image-landing-user'>
                             <img src='./public/img/image-landing-alluser.svg' className='w-full h-auto' alt='' />
+                        </div>
+                    )}
+                    {userClass == 'I' && (
+                        <div id='image-landing-user'>
+                            <img src='./public/img/home-class-investor-bg.svg' className='w-full h-auto' alt='' />
                         </div>
                     )}
                 </div>
