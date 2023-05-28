@@ -8,12 +8,12 @@ import { Link } from 'react-router-dom';
 
 const Consultation = () => {
     const [groupList, setGroupList] = useState([]);
-    console.log('before:', groupList);
+    const [num, setNum] = useState(0);
 
     useEffect(() => {
         axios.get('/api/list_consultationoffer').then((resp) => {
-            setGroupList([...groupList, JSON.stringify(resp.data)]);
-            console.log('after:', groupList);
+            setGroupList((old) => [...old, resp.data]);
+            setNum((old) => old + 1);
         });
     }, []);
 
@@ -23,6 +23,7 @@ const Consultation = () => {
                 <div className='grid place-items-center'>
                     <div className='flex flex-col items-center gap-2 '>
                         <h1 className='header-list-consultation-page '>Fashion Consultant</h1>
+                        <h1>{JSON.stringify(groupList)} </h1>
                         <p className='max-sm:text-xs text-center lg:text-start'>Learn with fashion experts and leading organisations on one of our highey rated fashion consultants to give your business a boost</p>
                     </div>
                 </div>
@@ -41,9 +42,7 @@ const Consultation = () => {
                         <label htmlFor='my-modal-3'>
                             <ClassUserHome.ConsultantCardWithPrice consultantName='Mbak Mbak asia' category='Food & Beverage' />
                         </label>
-                        <label htmlFor='my-modal-3'>
-                            <ClassUserHome.ConsultantCardWithPrice consultantName='Sultan Hafizh' category='Retail' />
-                        </label>
+                        <ClassUserHome.ConsultantCardWithPrice consultantName='Sultan Hafizh' category='Retail' />
                         <ClassUserHome.ConsultantCardWithPrice consultantName='Oktovivian' category='Automotive' />
                         <ClassUserHome.ConsultantCardWithPrice consultantName='Mbak Mbak asia' category='Food & Beverage' />
                         <ClassUserHome.ConsultantCardWithPrice consultantName='Sultan Hafizh' category='Retail' />

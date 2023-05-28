@@ -7,6 +7,7 @@ const ClassUserHome = () => {
     return;
 };
 
+//benefit section
 const Benefit = () => {
     return (
         <div className='bg-white pb-12 lg:pb-0 lg:h-[217px] container mx-auto grid place-content-center pl-5 pr-5'>
@@ -39,7 +40,9 @@ const Benefit = () => {
         </div>
     );
 };
+//end benefit section
 
+//List consultant
 const ListConsultantSectionHome = ({ text1, text2 }) => {
     const [filterConsultant, setFilterConsultant] = useState('Food & Beverage');
 
@@ -79,8 +82,9 @@ const ListConsultantSectionHome = ({ text1, text2 }) => {
         </div>
     );
 };
+// end of list consultant
 
-const ListConsultantAll = {};
+// component section
 
 const ConsultantCardWithPrice = ({ url = './public/img/counseling.svg', consultantName = 'consultant name', description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit....' }) => {
     return (
