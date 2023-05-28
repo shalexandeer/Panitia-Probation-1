@@ -13,6 +13,14 @@ const Home = () => {
                     <div className='flex flex-col justify-center items-center lg:items-start gap-6 lg:gap-7 lg:pt-12 lg:pb-12'>
                         {userClass == 'all' && (
                             <>
+                                <div className='bg-slate-700'>
+                                    <div className='lds-ring'>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                </div>
                                 <h1 className='text-center lg:text-start leading-10 md:leading-[3rem] xl:leading-[5rem] home-landing-heading font-semibold'>
                                     Welcome to <br className='hidden lg:block' /> <span className='text-primary'>Fundify</span> Consult Your <br /> <span className='text-primary'>Business</span> Now!
                                 </h1>
