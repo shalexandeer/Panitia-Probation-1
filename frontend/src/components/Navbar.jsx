@@ -47,10 +47,14 @@ const Navbar = ({ children, className }) => {
                                     </ul>
                                 </div>
                                 <div className={`flex-none hidden ${location.pathname == '/auth' ? 'hidden' : 'lg:block'}`}>
-                                    <Link to='/auth'>
-                                        {' '}
-                                        <button className='btn btn-xs sm:btn-sm md:btn-md lg:btn-lg bg-[#1496FF] border-none text-white'>Login</button>
-                                    </Link>
+                                    {localStorage.getItem('token') === null ? (
+                                        <Link to='/auth'>
+                                            {' '}
+                                            <button className='btn btn-xs sm:btn-sm md:btn-md lg:btn-lg bg-[#1496FF] border-none text-white'>Login</button>
+                                        </Link>
+                                    ) : (
+                                        <h1>sudah login bro</h1>
+                                    )}
                                 </div>
                                 <div className='flex-none lg:hidden'>
                                     <label htmlFor='my-drawer-3' className='btn btn-square btn-ghost'>
