@@ -5,7 +5,7 @@ import Card from './../components/Card';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const CardLogin = ({ onStateChange }) => {
     const [errorMessage, setErrorMessage] = useState('');
@@ -13,6 +13,12 @@ const CardLogin = ({ onStateChange }) => {
     const [statusCode, setStatusCode] = useState(0);
 
     const { register, handleSubmit } = useForm();
+
+    const navigate = useNavigate();
+
+    function refreshPage() {
+        window.location.reload(false);
+    }
     const onSubmit = (data) => {
         axios
             .post(
@@ -34,12 +40,16 @@ const CardLogin = ({ onStateChange }) => {
                 setLoadingButton(false);
             });
         console.log(data);
+        setTimeout(() => refreshPage(), 300);
     };
 
     const handleChange = () => {
         onStateChange((inLoginPage) => !inLoginPage);
     };
+    // navigate to home
     if (statusCode == 200) return <Navigate replace to={'/'} />;
+    //end of navigate to home
+
     return (
         <Card className={'flex flex-col gap-8 sm:border mt-10 sm:w-[531px] max-h-[876px] p-9 sm:p-16 rounded-3xl'}>
             <Card.Title text='Login to your account' />

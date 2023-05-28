@@ -1,9 +1,26 @@
 import { useState, useEffect } from 'react';
 import Card from './../components/Card';
 import Button from '../components/Button';
-
+import axios from 'axios';
 const Chat = () => {
     const [sizeWindow, setSizeWindow] = useState(window.innerWidth);
+
+    const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('user')) || {});
+
+    useEffect(() => {
+        return () => {
+            axios
+                .get('/api/list_konsultasi', {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: 'Bearer ' + (localStorage.getItem('token') || '')
+                    }
+                })
+                .then((resp) => {
+                    console.log(resp);
+                });
+        };
+    }, []);
 
     useEffect(() => {
         const handleResize = () => {
@@ -46,8 +63,8 @@ const ConsultantCard = ({ className, showDivider, handleChooseChat }) => {
                         <div className='bg-neutral-focus text-neutral-content rounded-full w-11'>
                             <span className='text-3xl'>K</span>
                         </div>
-                    </div>{" "}
-                    <div id="consultant-information">
+                    </div>{' '}
+                    <div id='consultant-information'>
                         <ConsultantName />
                         <ConsultantMessage />
                     </div>
