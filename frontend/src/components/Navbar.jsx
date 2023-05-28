@@ -8,7 +8,7 @@ const Navbar = ({ children, className }) => {
     useEffect(() => {
         const handleResize = () => {
             setSizeWindow(window.innerWidth);
-            console.log(sizeWindow);
+            //console.log(sizeWindow);
         };
         window.addEventListener('resize', handleResize);
     }, [sizeWindow]);

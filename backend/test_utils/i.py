@@ -7,41 +7,31 @@ parser.add_argument("N", help="0 for consultant, 1 for umkm", type=int)
 args = parser.parse_args()
 
 # self.token = ""
-URL = "http://0.0.0.0:3030"
-USERNAME = "U1"
-EMAIL = "E1"
-PHONE = "N1"
-PASSWORD = "P1"
+URL = "http://127.0.0.1:3030"
+USERNAME = "Konsultan_joko"
+EMAIL = "joko@gmail.com"
+PHONE = "08163781236"
+PASSWORD = "jokoganteng"
 TYP = "C"
-ADDRESS = "A1"
-TITLE = "T1"
-CATEGORY = "C1"
-DESCRIPTION = "D1"
-NOMINAL = 1
+ADDRESS = "rumah joko"
+TITLE = "joko jago"
+CATEGORY = "food-and-beverages"
+DESCRIPTION = "saya jago jual minuman"
+NOMINAL = 14000
 DURATION = 3600
 FORUM_ID = 1
-MESSAGE = "M1"
+MESSAGE = "ini pesan dari joko"
 KONSULTASI_ID = 1
 CONSULTANT = 1
-CATEGORY = "V1"
 
 if args.N == 1:
-    USERNAME = "U2"
-    EMAIL = "E2"
-    PHONE = "N2"
-    PASSWORD = "P2"
+    USERNAME = "UMKM_lemonade"
+    EMAIL = "lemonade@lemonade-business.com"
+    PHONE = "99911112222"
+    PASSWORD = "lemonade_sukses"
     TYP = "U"
-    ADDRESS = "A2"
-    TITLE = "T2"
-    CATEGORY = "C2"
-    DESCRIPTION = "D2"
-    NOMINAL = 2
-    DURATION = 3600
-    FORUM_ID = 2
-    MESSAGE = "M2"
-    KONSULTASI_ID = 2
-    CONSULTANT = 2
-    CATEGORY = "V2"
+    ADDRESS = "lemonade bandung"
+    MESSAGE = "ini pesan dari lemonade"
 
 
 class User:
@@ -177,6 +167,11 @@ class User:
                 "Content-Type": "application/json",
                 "Authorization": "Bearer "+self.token
             }.copy(),
+        )
+    
+    def list_consultationoffer(self,):
+        return R.get(
+            URL+f"/list_consultationoffer",
         )
 
     def accept_consultationoffer(self,):
