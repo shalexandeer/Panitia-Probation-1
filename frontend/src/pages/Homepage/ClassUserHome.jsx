@@ -68,10 +68,7 @@ const ListConsultantSectionHome = ({ text1, text2 }) => {
                 </Button>
             </div>
             <div id='about-us-card' className='max-w-[1170px] w-full flex flex-col sm:grid grid-cols-2 lg:grid-cols-3 justify-center gap-6 pl-5 pr-5'>
-                <label htmlFor='my-modal-3' className='btn'>
-                    <ConsultantCardWithPrice consultantName='Mbak Mbak asia' category='Food & Beverage' />
-                </label>
-
+                <ConsultantCardWithPrice consultantName='Mbak Mbak asia' category='Food & Beverage' />
                 <ConsultantCardWithPrice consultantName='Sultan Hafizh' category='Retail' />
                 <ConsultantCardWithPrice consultantName='Oktovivian' category='Automotive' />
                 <ConsultantCardWithPrice consultantName='Mbak Mbak asia' category='Food & Beverage' />
@@ -84,21 +81,6 @@ const ListConsultantSectionHome = ({ text1, text2 }) => {
 };
 
 const ListConsultantAll = {};
-
-const ModalCardConsultation = () => {
-    <>
-        <input type='checkbox' id='my-modal-3' className='modal-toggle' />
-        <div className='modal'>
-            <div className='modal-box relative'>
-                <label htmlFor='my-modal-3' className='btn btn-sm btn-circle absolute right-2 top-2'>
-                    ✕
-                </label>
-                <h3 className='text-lg font-bold'>Congratulations random Internet user!</h3>
-                <p className='py-4'>You've been selected for a chance to get one year of subscription to use Wikipedia for free!</p>
-            </div>
-        </div>
-    </>;
-};
 
 const ConsultantCardWithPrice = ({ url = './public/img/counseling.svg', consultantName = 'consultant name', description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit....' }) => {
     return (
