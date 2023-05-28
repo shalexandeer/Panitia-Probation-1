@@ -3,6 +3,7 @@ import Card from './../components/Card';
 import Button from '../components/Button';
 import { useForm } from 'react-hook-form';
 import LayoutInputLabel from '../components/LayoutInputLabel';
+import Modal from '../components/Modal';
 
 //Layout
 const Forum = () => {
@@ -107,6 +108,10 @@ const AddQuestion = () => {
     const onSubmit = (data) => {
         console.log(data);
     };
+
+    //all filled
+    const [formFilled, setFormFilled] = useState({ subject: '', question: '' });
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div>
@@ -114,19 +119,34 @@ const AddQuestion = () => {
                     <div className='h-[70px] w-[70px] bg-slate-500 rounded-full'></div>
                     <div id='form-input-add-question' className='w-full'>
                         <LayoutInputLabel>
-                            <input {...register('title')} placeholder={'Add Title'} className='h-[70px] ' required />
-                            <textarea {...register('question-text')} placeholder={'Your Question'} className='h-[70px] ' required />
+                            <input
+                                {...register('title')}
+                                placeholder={'Add Title'}
+                                className='h-[70px] '
+                                onChange={(e) => {
+                                    setFormFilled({ ...formFilled, subject: e.target.value });
+                                }}
+                                value={formFilled.subject}
+                                required
+                            />
+                            <textarea
+                                {...register('question-text')}
+                                placeholder={'Your Question'}
+                                className='h-[70px]'
+                                onChange={(e) => {
+                                    setFormFilled({ ...formFilled, question: e.target.value });
+                                }}
+                                value={formFilled.question}
+                                required
+                            />
                         </LayoutInputLabel>
                     </div>
                 </div>
                 <div className='modal-action'>
-                    <Button type='submit' className={'btn btn-wide btn-primary'}>
-                        <label htmlFor='my-modal-5' className=''>
-                            Post Question
-                        </label>
-                    </Button>
+                    <Modal.ModalButton className={`btn  ${formFilled.subject != '' && formFilled.question != '' ? 'btn-primary' : 'btn-disabled bg-slate-400'}`} text='Proceed Question' />
                 </div>
             </div>
+            <Modal onSubmit={onSubmit} />
         </form>
     );
 };
@@ -164,7 +184,10 @@ const DiscussionCard = () => {
                 <div className='lg:h-full flex flex-col max-lg:gap-4 lg:justify-between pt-3 pb-3'>
                     <ForumTopicTitle className={'text-2xl font-semibold leading-8'} />
                     <ForumDescription className={`text-base leading-7`} />
-                    <CountAnswer />
+                    <div className='flex justify-between'>
+                        <CountAnswer />
+                        <GetPostTime />
+                    </div>
                 </div>
             </Card.Body>
         </Card>
@@ -185,6 +208,10 @@ const CountAnswer = () => {
 
 const CountAllQuestion = () => {
     return <h1>1,245 questions</h1>;
+};
+
+const GetPostTime = () => {
+    return <h1>1 hours ago</h1>;
 };
 //
 

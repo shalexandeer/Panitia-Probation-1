@@ -66,7 +66,7 @@ Headers:
     Authorization: Bearer <jwt>
 Returns:
     4XX:{"message":string}
-    2XX:{"list":[string,string,int,string,string,string][]} #title,name,nominal,tsc,tsac,tsd
+    2XX:{"list":[int,string,string,int,string,string,string][]} #id,title,name,nominal,tsc,tsac,tsd
 
 [POST]
 /write_konsultasi

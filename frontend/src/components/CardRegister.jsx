@@ -4,7 +4,6 @@ import Button from './../components/Button';
 import Card from './../components/Card';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-// import express from 'express';
 
 const CardRegister = ({ inLoginPage, onStateChange }) => {
     const { register, handleSubmit } = useForm();
@@ -20,19 +19,19 @@ const CardRegister = ({ inLoginPage, onStateChange }) => {
             data: {
                 username: data.username,
                 email: data.email,
-                phone: data.phone,
+                phone: data.number,
                 password: data.password,
                 typ: data.role,
                 address: data.address
             }
         };
-        //data posted
-        const userData = {};
         //submit data
         const submitData = async () => {
             try {
-                const response = await axios.post('http://localhost:3030/register', userData, config);
-                console.log(response);
+                console.log('test', options.data);
+                const response = await axios.post('/api/register', options.data, options).then((resp) => {
+                    console.log('resp =', resp.data);
+                });
             } catch (error) {
                 console.log(error);
             }

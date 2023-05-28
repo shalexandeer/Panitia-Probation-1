@@ -3,10 +3,30 @@ import Label from './../components/Label';
 import Button from './../components/Button';
 import Card from './../components/Card';
 import { useForm } from 'react-hook-form';
+import axios from 'axios';
 
 const CardLogin = ({ onStateChange }) => {
     const { register, handleSubmit } = useForm();
-    const onSubmit = (data) => console.log(data);
+    const onSubmit = (data) => {
+        axios
+            .post(
+                '/api/login',
+                {
+                    email: data.email,
+                    password: data.password
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            )
+            .then((resp) => {
+                console.log(resp.data);
+                localStorage.setItem('token', resp.data['token']);
+            });
+        console.log(data);
+    };
 
     const handleChange = () => {
         onStateChange((inLoginPage) => !inLoginPage);

@@ -46,8 +46,8 @@ const ConsultantCard = ({ className, showDivider, handleChooseChat }) => {
                         <div className='bg-neutral-focus text-neutral-content rounded-full w-11'>
                             <span className='text-3xl'>K</span>
                         </div>
-                    </div>{' '}
-                    <div id='consultant-information'>
+                    </div>{" "}
+                    <div id="consultant-information">
                         <ConsultantName />
                         <ConsultantMessage />
                     </div>
@@ -72,8 +72,22 @@ const ConsultantStatus = () => {
 
 const ChatMessage = ({ className }) => {
     return (
-        <div className={`${className}`}>
-            <h1>lagi apa</h1>
+        <div>
+            <div className={`${className} flex flex-col gap-6 `}>
+                <ChatBubble userClass='U' />
+                <ChatBubble userClass='I' />
+                <ChatBubble userClass='U' />
+                <ChatBubble userClass='I' />
+                <ChatBubble userClass='I' />
+                <ChatBubble userClass='I' />
+                <ChatBubble userClass='I' />
+                <ChatBubble userClass='U' />
+                <ChatBubble userClass='U' />
+            </div>
+            <div id='chat-sending-bar' className='flex p-[2rem] gap-3'>
+                <input placeholder={'Type Message'} className='w-full h-[50px] border rounded-2xl pl-6 ' />
+                <Button className={'btn btn-primary'}>{'Send >'}</Button>
+            </div>
         </div>
     );
 };
@@ -102,7 +116,7 @@ const ChatDetailMessage = ({ handleCloseChat }) => {
                     </div>
                     <div className={`divider m-[0px_!important]`}></div>
                 </div>
-                <ChatMessage className={'p-[2rem_4rem_1rem_3rem] h-screen max-h-[550px]'} />
+                <ChatMessage className={'p-5 lg:p-[2rem_4rem_1rem_3rem] h-screen max-h-[550px] overflow-y-scroll overflow-x-hidden'} />
             </Card.Body>
         </Card>
     );
@@ -154,6 +168,25 @@ const MobileChatView = () => {
             )}
         </div>
     );
+};
+
+const ChatBubble = ({ userClass = 'U' }) => {
+    return (
+        <div className={`chat ${userClass == 'U' ? 'chat-start' : 'chat-end'}`}>
+            <div className='chat-image avatar'>
+                <div className='w-10 rounded-full'>
+                    <img src='./public/img/potrait.jpg' />
+                </div>
+            </div>
+            <div className={`chat-bubble  ${userClass == 'U' ? 'chat-bubble-primary' : 'bg-white shadow-lg text-[#00000_!important]'}`}>
+                <ReceiveMessage />
+            </div>
+        </div>
+    );
+};
+
+const ReceiveMessage = () => {
+    return <>It was said that you would, destroy the Sith, not join them.</>;
 };
 
 export default Chat;
