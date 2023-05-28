@@ -9,8 +9,8 @@ const Auth = () => {
     };
     return (
         <div className="h-[100vh] sm:bg-[url('./public/img/backgroundRegister.svg')] bg-no-repeat bg-cover " id='register-all-wrapper'>
-            <div className='h-full flex justify-end items-center  sm:pl-6 sm:pr-6 lg:pl-[100px] lg:pr-[100px]'>
-                <div className='flex justify-center lg:justify-end'>{inLoginPage ? <CardLogin inLoginPage={inLoginPage} onStateChange={handleInLoginPage} /> : <CardRegister inLoginPage={inLoginPage} onStateChange={handleInLoginPage} />}</div>
+            <div className='h-full flex justify-center lg:justify-end items-center  sm:pl-6 sm:pr-6 lg:pl-[100px] lg:pr-[100px]'>
+                <div className='flex justify-center lg:justify-end w-full'>{inLoginPage ? <CardLogin inLoginPage={inLoginPage} onStateChange={handleInLoginPage} /> : <CardRegister inLoginPage={inLoginPage} onStateChange={handleInLoginPage} />}</div>
             </div>
         </div>
     );

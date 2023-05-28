@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import Heading from '../components/Heading';
 import { useState } from 'react';
 import Button from '../components/Button';
+import { Link } from 'react-router-dom';
 
 const Payment = () => {
     // handle change page
@@ -14,8 +15,10 @@ const Payment = () => {
     };
 
     return (
-        <div className=' bg-[#FAFCFE] bg-no-repeat bg-cover container mx-auto '>
-            <div className='lg:grid lg:grid-cols-2 gap-[3.75rem] pt-[2rem] pl-5 pr-5 sm:pl-6 sm:pr-6 xl:p-0 '>{pageCount == 0 ? <Payment.Order handlePage={handlePage} /> : pageCount == 1 ? <Payment.DetailPayment handlePage={handlePage} /> : ''}</div>
+        <div className='bg-[#FAFCFE] h-screen'>
+            <div className=' bg-no-repeat bg-cover container mx-auto '>
+                <div className='lg:grid lg:grid-cols-2 gap-[3.75rem] pt-[2rem] pl-5 pr-5 sm:pl-6 sm:pr-6 xl:p-[2rem_0_0_0] '>{pageCount == 0 ? <Payment.Order handlePage={handlePage} /> : pageCount == 1 ? <Payment.DetailPayment handlePage={handlePage} /> : ''}</div>
+            </div>
         </div>
     );
 };
@@ -24,11 +27,11 @@ const Order = ({ handlePage }) => {
     const { register, handleSubmit } = useForm();
     const onSubmit = (data) => console.log(data);
 
-    const [rememberChecked, setRememberChecked] = useState(false);
+    const [termsChecked, setTermsChecked] = useState(false);
 
     //onchange remember me handler
     const handlerChange = () => {
-        setRememberChecked(!rememberChecked);
+        setTermsChecked(!termsChecked);
     };
     return (
         <>
@@ -48,7 +51,7 @@ const Order = ({ handlePage }) => {
                                     <Heading className='text-[#111827] font-semibold leading-[3.75rem] heading-payment' text={'Detail Order'} />
                                     <Card className={'sm:border pt-6 pb-6'}>
                                         <div className='flex flex-col gap-4 pb-6'>
-                                            <Heading className={'text-2xl font-semibold leading-[36px] sm:pl-12 sm:pr-12 heading-course-payment '} text={'Konsultasi Membangun Usaha Kuliner'} />
+                                            <Heading className={'font-semibold leading-[36px] sm:pl-12 sm:pr-12 heading-course-payment '} text={'Konsultasi Membangun Usaha Kuliner'} />
                                             <Heading className={'text-base text-[#41505C] font-semibold leading-[19px] sm:pl-12 sm:pr-12  '} text={'Basic Packet'} />
                                             <Heading className={'text-base text-[#41505C] font-semibold leading-[19px] sm:pl-12 sm:pr-12  '} text={'1 Hours'} />
                                         </div>
@@ -78,19 +81,19 @@ const Order = ({ handlePage }) => {
                             <Card.Body className={'flex flex-col gap-6'}>
                                 <LayoutInputLabel>
                                     <Label text={'Name'} />
-                                    <input {...register('name')} placeholder={'Enter your name'} />
+                                    <input {...register('name')} placeholder={'Sultan Hafizh Alexander'} disabled />
                                 </LayoutInputLabel>
                                 <div className='grid grid-cols-1 2xl:grid-cols-2 gap-7'>
                                     <LayoutInputLabel>
                                         <Label text={'Phone Number'} />
                                         <div className='flex flex-row lg:grid lg:grid-cols-[20%_80%]'>
                                             <input disabled placeholder='+62' className='bg-slate-200 roun rounded-tr-[0_!important] rounded-br-[0_!important] max-lg:max-w-[60px]' />
-                                            <input {...register('phoneNumber')} className='w-full rounded-tl-[0_!important] rounded-bl-[0_!important] ' placeholder={'Enter your phone number'} />
+                                            <input {...register('phoneNumber')} className='w-full rounded-tl-[0_!important] rounded-bl-[0_!important] ' placeholder={'0857863321'} disabled />
                                         </div>
                                     </LayoutInputLabel>
                                     <LayoutInputLabel>
                                         <Label text={'Email'} />
-                                        <input {...register('email')} placeholder={'Enter your name'} />
+                                        <input {...register('email')} placeholder={'Shalexander09@gmail.com'} disabled />
                                     </LayoutInputLabel>
                                 </div>
                             </Card.Body>
@@ -119,13 +122,13 @@ const Order = ({ handlePage }) => {
                 <div id='payment-agreement' className='flex gap-3'>
                     <div className='form-control'>
                         <label className='label cursor-pointer flex gap-3'>
-                            <input type='checkbox' className='checkbox checkbox-primary' onChange={handlerChange} value={rememberChecked} />
+                            <input type='checkbox' className='checkbox checkbox-primary' onChange={handlerChange} value={termsChecked} />
                             <span className='label-text label-text-style'>By clicking the button below, you agree to Fundify's Terms and Conditions and Privacy Policy.</span>
                         </label>
                     </div>
                 </div>
                 <div id='button-payment-wrapper' className='flex sm:justify-end '>
-                    <Button className={'bg-primary border-none text-white sm:w-[439px] max-sm:w-full'} onClick={() => handlePage('+')}>
+                    <Button className={`border-none text-white sm:w-[439px] max-sm:w-full ${termsChecked ? 'bg-primary ' : 'btn-disabled'}`} onClick={() => handlePage('+')}>
                         Go to Payment
                     </Button>
                 </div>
@@ -158,7 +161,7 @@ const Order = ({ handlePage }) => {
 };
 
 const DetailPayment = ({ handlePage }) => {
-    const [selectValue, setSelectValue] = useState('');
+    const [selectValue, setSelectValue] = useState('Virtual Account');
 
     const handleSelectValue = (event) => {
         setSelectValue(event.target.value);
@@ -168,14 +171,11 @@ const DetailPayment = ({ handlePage }) => {
         <>
             <div className='flex flex-col gap-10'>
                 <div className='flex flex-col gap-3'>
-                    <div className='flex flex-col sm:flex-row justify-between '>
+                    <div className='flex flex-col xl:flex-row justify-between '>
                         <Heading className='text-[#111827] font-semibold heading-payment leading-[3.75rem]' text={'Payment Method'} />
                         <div className='flex flex-col gap-4'>
                             <div>
-                                <select className='select select-bordered w-full max-w-xs' onChange={handleSelectValue} defaultValue={'Select Payment Method'}>
-                                    <option disabled selected>
-                                        Select payment method
-                                    </option>
+                                <select className='select select-bordered w-full max-w-xs' onChange={handleSelectValue} defaultValue={'Select payment Method'}>
                                     <option>Virtual Account</option>
                                     <option>Instant Payment</option>
                                 </select>
@@ -226,9 +226,7 @@ const DetailPayment = ({ handlePage }) => {
                     <button className='btn btn-outline btn-primary' onClick={() => handlePage('-')}>
                         go back
                     </button>
-                    <Button className={'bg-primary border-none text-white lg::w-[439px] max-sm:w-full'} onClick={() => handlePage('+')}>
-                        Confirm Payment
-                    </Button>
+                    <ModalPaymentSuccess />
                 </div>
             </div>
             <div className='hidden lg:flex flex-col gap-3'>
@@ -246,7 +244,7 @@ const DetailPayment = ({ handlePage }) => {
                     <div className='divider m-[0px_!important]'></div>
                     <div className='flex flex-col gap-4 pb-6 pt-6'>
                         <Heading className={'text-xl text-[#6B7280] font-medium leading-[19px] sm:pl-12 sm:pr-12'} text={'Detail Order'} />
-                        <Heading className={'text-2xl font-semibold leading-[19px] sm:pl-12 sm:pr-12'} text={'Konsultasi Membangun Usaha Kuliner'} />
+                        <Heading className={'text-2xl font-semibold leading-[36px] sm:pl-12 sm:pr-12 '} text={'Konsultasi Membangun Usaha Kuliner'} />
                         <Heading className={'text-2xl font-medium leading-[36px] sm:pl-12 sm:pr-12  '} text={'120289000341'} />
                     </div>
                     <div className='divider m-[0px_!important]'></div>
@@ -306,6 +304,31 @@ const InstantPayment = () => {
                 <Payment.MethodPayment text={'Dana'} url={`./public/img/bank-bca.svg`} />
                 <div className='divider m-[0px_!important]'></div>
                 <Payment.MethodPayment text={'OVO'} url={`./public/img/bank-bca.svg`} />
+            </div>
+        </>
+    );
+};
+
+const ModalPaymentSuccess = () => {
+    return (
+        <>
+            {/* The button to open modal */}
+            <label htmlFor='my-modal' className='btn bg-primary border-none text-white lg::w-[439px] max-sm:w-full'>
+                Confirm Payment
+            </label>
+
+            {/* Put this part before </body> tag */}
+            <input type='checkbox' id='my-modal' className='modal-toggle' />
+            <div className='modal'>
+                <div className='modal-box flex flex-col justify-center items-center p-10'>
+                    <Heading text={'Payment Success!'} className={'heading-payment font-semibold'} />
+                    <p className='py-4'>Payment ID: 120897561</p>
+                    <div className='modal-action'>
+                        <label htmlFor='my-modal' className='btn btn-wide btn-primary'>
+                            <Link to='/chat'>Go to room chat</Link>
+                        </label>
+                    </div>
+                </div>
             </div>
         </>
     );

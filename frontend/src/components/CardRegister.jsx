@@ -45,13 +45,13 @@ const CardRegister = ({ inLoginPage, onStateChange }) => {
     };
 
     return (
-        <Card className={'flex flex-col gap-8 sm:w-[900px] max-h-[876px] p-9 sm:p-16 rounded-3xl'}>
+        <Card className={'flex flex-col gap-8 w-full lg:w-[900px] max-h-[876px] p-9 sm:p-16 rounded-3xl'}>
             <Card.Title text='Create an Account' />
             <Card.Body>
                 <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-8'>
                     <div className='flex flex-col gap-12'>
                         <div className='flex flex-col gap-6' id='input-form-style'>
-                            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                            <div className='flex flex-col lg:grid lg:grid-cols-2 gap-4'>
                                 <LayoutInputLabel>
                                     <Label text={'Email'} />
                                     <input {...register('email')} placeholder={'Enter your email'} required />
@@ -61,7 +61,7 @@ const CardRegister = ({ inLoginPage, onStateChange }) => {
                                     <input {...register('username')} placeholder={'Enter your username'} required />
                                 </LayoutInputLabel>
                             </div>
-                            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                            <div className='flex flex-col lg:grid lg:grid-cols-2 gap-4'>
                                 <LayoutInputLabel>
                                     <Label text={'Password'} />
                                     <input {...register('password')} type='password' placeholder={'Enter your password'} required />

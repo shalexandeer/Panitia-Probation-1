@@ -1,7 +1,7 @@
 import Heading from './Heading';
 
 const Card = ({ children, className }) => {
-    return <div className={`${className == undefined ? '' : className} bg-white w-full  `}>{children}</div>;
+    return <div className={`${className == undefined ? '' : className} bg-white w-full `}>{children}</div>;
 };
 
 const Title = ({ text = 'Create an account' }) => {

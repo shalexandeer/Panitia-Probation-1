@@ -16,7 +16,10 @@
     padding: 0;
     box-sizing: border-box;
 }
-#input-form-style input, select{
+.btn{
+    text-transform: none !important;
+}
+#input-form-style input, select, textarea{
     border: 0.5px solid #dbdbdb;
     padding: 12px 16px;
     border-radius: 8px;
@@ -40,7 +43,6 @@
     border-bottom: 2px solid #1496FF;
 }
 #home-landing-page{
-    background-image: url(./public/img/background-home.svg) !important;
     background-size: cover;
     background-position: center;
 }
@@ -75,6 +77,9 @@
 .home-heading{
     font-size: clamp(2.25rem, 1.5752rem + 1.8123vw, 3.75rem);
 }
+.home-landing-heading {
+    font-size: clamp(2rem, 1.5146rem + 2.0712vw, 4rem);
+}
 .home-hero-paragraph{
     font-size: clamp(0.875rem, 0.8143rem + 0.2589vw, 1.125rem);
 }
@@ -107,3 +112,52 @@
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
 }
+
+/* about us home */
+#aboutusbg, #consultant-home, #forum-section{
+    background: rgba(13, 110, 253, 0.07);
+
+}
+.about-us-heading{
+    font-size: clamp(1.5rem, 1.2573rem + 1.0356vw, 2.5rem);
+}
+
+/* commercial section honme */
+.commercial-heading{
+    font-size: clamp(1.5rem, 1.1359rem + 1.5534vw, 3rem);
+    line-height: 120%;
+}
+.commercial-start-from{
+    font-size: clamp(1.5rem, 1.2573rem + 1.0356vw, 2.5rem);
+    line-height: 120%;
+}
+/* consultant card landing home  */
+
+
+
+/* banner get investor */
+#banner-get-investor{
+    background: url(./public/img/banner-get-investor.svg);
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+
+/* class user home  */
+@media screen and (min-width: 1024px) {
+    .class-user-bg{
+        background: url(./public/img/home-class-user-bg.svg);
+        
+    }    
+}
+.text-feature-class-user-bg{
+    font-size: clamp(1rem, 0.8786rem + 0.5178vw, 1.5rem);
+}
+.header-list-consultation-page{
+    font-size: clamp(1.5rem, 0.9539rem + 2.3301vw, 3.75rem);
+    font-weight: 600;
+
+}
+
+/* swiper css style */
