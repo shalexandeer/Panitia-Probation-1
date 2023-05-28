@@ -1,4 +1,5 @@
 import { IconLogout2 } from '@tabler/icons-react';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Outlet, Link, NavLink, useLocation } from 'react-router-dom';
 import { Message2 } from 'tabler-icons-react';
@@ -8,7 +9,20 @@ const Navbar = ({ children, className }) => {
     const [sizeWindow, setSizeWindow] = useState();
 
     //handle user class's username
-    const [userClassName, setUserClassName] = useState(localStorage.getItem('name'));
+
+    const [userClassName, setUserInfo] = useState(JSON.parse(localStorage.getItem('user')) || {});
+
+    useEffect(() => {
+        axios
+            .get('/api/self_info', {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+            .then((resp) => {
+                localStorage.setItem('user', JSON.stringify(resp.data));
+            });
+    }, []);
 
     useEffect(() => {
         const handleResize = () => {
@@ -74,7 +88,7 @@ const Navbar = ({ children, className }) => {
                                                                 <img src='/public/img/potrait.jpg' />
                                                             </div>
                                                         </div>
-                                                        <h1>Halo, {userClassName}</h1>
+                                                        <h1>Halo, {userClassName['name']}</h1>
                                                     </div>
                                                 </label>
                                                 <ul tabIndex={0} className='border dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52'>
@@ -142,7 +156,7 @@ const Navbar = ({ children, className }) => {
                                         <img src='/public/img/potrait.jpg' />
                                     </div>
                                 </div>
-                                <h1>sudah login bro</h1>
+                                <h1>Halo {userClassName['name']}</h1>
                             </div>
                         )}
                     </ul>

@@ -6,6 +6,7 @@ import ClassInvestorHome from './ClassInvestorHome';
 import axios from 'axios';
 
 const Home = () => {
+    // Get user info
     const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('user')) || {});
 
     useEffect(() => {
@@ -99,7 +100,7 @@ const Home = () => {
             {/*end lisc consultant for UMKM user class */}
 
             {/* banner get investo for all user class */}
-            {userInfo['class'] == 'all' && (
+            {userInfo['class'] == undefined && (
                 <>
                     <div id='banner-get-investor' className='pl-5 pr-5 sm:pl-6 sm:pr-6 lg:h-[911px] '>
                         <BannerGetInvestor />
