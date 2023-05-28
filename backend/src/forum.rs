@@ -11,9 +11,9 @@ pub async fn list_forums(
         SELECT id,title,tscreate::timestamptz(0)::text FROM forum 
     "#, &[]).await.unwrap().iter().map(
             |x|{
-                let id = x.try_get::<&str,i64>("id").unwrap();
-                let title = x.try_get::<&str,String>("title").unwrap();
-                let tscreate = x.try_get::<&str,String>("tscreate").unwrap();
+                let id: i64 = x.get("id");
+                let title: String = x.get("title");
+                let tscreate: String = x.get("tscreate");
                 (id,title,tscreate)
             }
         ).collect();
@@ -74,11 +74,11 @@ pub async fn load_forum(
     "#, &[&forum_id]).await.unwrap().iter().map(
             |x|{
                 // message_id | writer_id | name | message | tswrite 
-                let message_id = x.try_get::<&str,i64>("message_id").unwrap();
-                let writer_id = x.try_get::<&str,i64>("writer_id").unwrap();
-                let name = x.try_get::<&str,String>("name").unwrap();
-                let message = x.try_get::<&str,String>("message").unwrap();
-                let tswrite = x.try_get::<&str,String>("tswrite").unwrap();
+                let message_id: i64 = x.get("message_id");
+                let writer_id: i64 = x.get("writer_id");
+                let name: String = x.get("name");
+                let message: String = x.get("message");
+                let tswrite: String = x.get("tswrite");
                 (message_id, writer_id, name, message, tswrite)
             }
         ).collect();
