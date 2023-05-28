@@ -1,7 +1,22 @@
+import { useEffect } from 'react';
 import Button from '../components/Button';
 import ClassUserHome from './Homepage/ClassUserHome';
+import { useState } from 'react';
+import axios from 'axios';
+import { IconCheck, IconStar } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 const Consultation = () => {
+    const [groupList, setGroupList] = useState([]);
+    console.log('before:', groupList);
+
+    useEffect(() => {
+        axios.get('/api/list_consultationoffer').then((resp) => {
+            setGroupList([...groupList, JSON.stringify(resp.data)]);
+            console.log('after:', groupList);
+        });
+    }, []);
+
     return (
         <div className='bg-[#f6f6f6]'>
             <div className='container mx-auto pl-5 pr-5 lg:pl-0 lg:pr-0 flex flex-col gap-12 pt-12 pb-12 items-center'>
@@ -44,14 +59,104 @@ const Consultation = () => {
                 {/* Put this part before </body> tag */}
                 <input type='checkbox' id='my-modal-3' className='modal-toggle' />
                 <div className='modal'>
-                    <div className='modal-box w-11/12 max-w-full p-[100px]'>
+                    <div className='modal-box w-11/12 max-w-full lg:p-[50px] xl:p-[100px]'>
                         <label htmlFor='my-modal-3' className='btn btn-sm btn-circle absolute right-2 top-2'>
                             ✕
                         </label>
-                        <div className='' id='detail-paket'>
-                            <div id='user-biodata'></div>
+                        <div className='flex flex-col-reverse md:grid grid-cols-2 gap-6 lg:flex lg:flex-row lg:gap-14 '>
+                            <div className='' id='detail-paket'>
+                                <div id='user-biodata' className='flex flex-col gap-2 md:gap-4'>
+                                    <div className='h-[237px] max-w-[356px] lg:w-[356px] rounded-lg bg-slate-500'></div>
+                                    <h1 className='text-2xl font-semibold'>Antonio Sanjaya</h1>
+                                    <div className='flex items-center gap-3 '>
+                                        <p className='text-xl'>4.8</p>
+                                        <IconStar className='w-4' />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='flex flex-col w-full'>
+                                <h1 className='card-modal-consultation pb-3'>Konsultasi Membangun Usaha Kuliner</h1>
+                                <p className='card-modal-consultation-category leading-[120%] text-primary'>Food & Beverage</p>
+                                <div className='divider'></div>
+                                <div className='flex flex-col gap-2'>
+                                    <p className='font-semibold'>Description</p>
+                                    <p className=''>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                                </div>
+                            </div>
                         </div>
-                        <p className='py-4'>You've been selected for a chance to get one year of subscription to use Wikipedia for free!</p>
+                        <div className='flex flex-col gap-6 md:grid md:grid-cols-3 max-lg:pt-12'>
+                            <div id='bussines-package' className='max-lg:border p-2 flex flex-col gap-4'>
+                                <div>
+                                    <h1 className='card-modal-consultation-category font-semibold'>Basic</h1>
+                                    <div className='flex items-end gap-1'>
+                                        <h1 className='card-modal-consultation pb-3'>Rp165.000</h1>
+                                        <h1 className='text-base pb-3'>/hours</h1>
+                                    </div>
+                                </div>
+                                <Link to={'/payment'}>
+                                    <Button className={'btn btn-primary w-full'}>Buy Packet</Button>
+                                </Link>
+                                <p>Everything necessary to get started.</p>
+                                <div className='flex gap-3'>
+                                    <IconCheck className='bg-primary p-1 text-white rounded-full' />
+                                    <p>Panduan penyusunan MBC</p>
+                                </div>
+                                <div className='flex gap-3'>
+                                    <IconCheck className='bg-primary p-1 text-white rounded-full' />
+                                    <p>Panduan action plan</p>
+                                </div>
+                                <div className='flex gap-3'>
+                                    <IconCheck className='bg-primary p-1 text-white rounded-full' />
+                                    <p>Panduan aktivasi Sosial</p>
+                                </div>
+                            </div>
+                            <div id='bussines-package' className='max-lg:border p-2 flex flex-col gap-4'>
+                                <div>
+                                    <h1 className='card-modal-consultation-category font-semibold'>Business Setup</h1>
+                                    <div className='flex items-end gap-1'>
+                                        <h1 className='card-modal-consultation pb-3'>Rp500.000</h1>
+                                        <h1 className='text-base pb-3'>/hours</h1>
+                                    </div>
+                                </div>
+                                <Button className={'btn btn-primary w-full'}>Buy Packet</Button>
+                                <p>Everything in Basic, plus essential tools for growing your business.</p>
+                                <div className='flex gap-3'>
+                                    <IconCheck className='bg-primary p-1 text-white rounded-full' />
+                                    <p>Free website 1 tahun </p>
+                                </div>
+                                <div className='flex gap-3'>
+                                    <IconCheck className='bg-primary p-1 text-white rounded-full' />
+                                    <p>Free email bisnis 1 tahun</p>
+                                </div>
+                                <div className='flex gap-3'>
+                                    <IconCheck className='bg-primary p-1 text-white rounded-full' />
+                                    <p>Free rekomendasi software</p>
+                                </div>
+                            </div>
+                            <div id='bussines-package' className=' max-lg:border p-2 flex flex-col gap-4'>
+                                <div>
+                                    <h1 className='card-modal-consultation-category font-semibold'>Business Success</h1>
+                                    <div className='flex items-end gap-1'>
+                                        <h1 className='card-modal-consultation pb-3'>Rp800.000</h1>
+                                        <h1 className='text-base pb-3'>/hours</h1>
+                                    </div>
+                                </div>
+                                <Button className={'btn btn-primary w-full'}>Buy Packet</Button>
+                                <p>Everything in Essential, plus collaboration tools and deeper insights.</p>
+                                <div className='flex gap-3'>
+                                    <IconCheck className='bg-primary p-1 text-white rounded-full' />
+                                    <p>Free website 1 tahun </p>
+                                </div>
+                                <div className='flex gap-3'>
+                                    <IconCheck className='bg-primary p-1 text-white rounded-full' />
+                                    <p>Free email bisnis 1 tahun</p>
+                                </div>
+                                <div className='flex gap-3'>
+                                    <IconCheck className='bg-primary p-1 text-white rounded-full' />
+                                    <p>Free rekomendasi software</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -61,21 +166,6 @@ const Consultation = () => {
 
 const GetConsultant = () => {
     return <h1>107 Consultants</h1>;
-};
-
-const ModalDetailConsultation = () => {
-    <>
-        <input type='checkbox' id='my-modal-3' className='modal-toggle' />
-        <div className='modal'>
-            <div className='modal-box relative'>
-                <label htmlFor='my-modal-3' className='btn btn-sm btn-circle absolute right-2 top-2'>
-                    ✕
-                </label>
-                <h3 className='text-lg font-bold'>Congratulations random Internet user!</h3>
-                <p className='py-4'>You've been selected for a chance to get one year of subscription to use Wikipedia for free!</p>
-            </div>
-        </div>
-    </>;
 };
 
 export default Consultation;
