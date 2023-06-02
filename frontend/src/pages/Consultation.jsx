@@ -8,13 +8,20 @@ import { Link } from 'react-router-dom';
 
 const Consultation = () => {
     const [groupList, setGroupList] = useState([]);
-    const [num, setNum] = useState(0);
+    //for modal detail consultation
+    const [modalData, setModalData] = useState();
+    const handleModalData = (e) => {
+        setModalData(e);
+    };
 
     useEffect(() => {
-        axios.get('/api/list_consultationoffer').then((resp) => {
-            setGroupList((old) => [...old, resp.data]);
-            setNum((old) => old + 1);
-        });
+        axios
+            .get('/api/list_consultationoffer')
+            .then((resp) => {
+                setGroupList(resp.data.list);
+                console.log(groupList, resp.data);
+            })
+            .catch((e) => console.log(e.message));
     }, []);
 
     return (
@@ -22,14 +29,14 @@ const Consultation = () => {
             <div className='container mx-auto pl-5 pr-5 lg:pl-0 lg:pr-0 flex flex-col gap-12 pt-12 pb-12 items-center'>
                 <div className='grid place-items-center'>
                     <div className='flex flex-col items-center gap-2 '>
-                        <h1 className='header-list-consultation-page '>Fashion Consultant</h1>
-                        <h1>{JSON.stringify(groupList)} </h1>
+                        <h1 className='header-list-consultation-page '>Choose Your Consultant</h1>
+                        {/* <h1>{JSON.stringify(groupList)} </h1> */}
                         <p className='max-sm:text-xs text-center lg:text-start'>Learn with fashion experts and leading organisations on one of our highey rated fashion consultants to give your business a boost</p>
                     </div>
                 </div>
                 <div className='flex flex-col gap-9'>
                     <div className='flex justify-between items-center' id='filter-count'>
-                        <GetConsultant />
+                        <GetConsultant list={groupList.length} />
                         <select className='select select-bordered w-full max-w-xs'>
                             <option disabled selected>
                                 Sort by: Most Popular
@@ -39,18 +46,15 @@ const Consultation = () => {
                         </select>
                     </div>
                     <div id='about-us-card' className='w-full flex flex-col sm:grid grid-cols-2 lg:grid-cols-4 justify-center gap-x-6 gap-y-6  lpl-5 pr-5 lg:p-0'>
-                        <label htmlFor='my-modal-3'>
-                            <ClassUserHome.ConsultantCardWithPrice consultantName='Mbak Mbak asia' category='Food & Beverage' />
-                        </label>
-                        <ClassUserHome.ConsultantCardWithPrice consultantName='Sultan Hafizh' category='Retail' />
-                        <ClassUserHome.ConsultantCardWithPrice consultantName='Oktovivian' category='Automotive' />
-                        <ClassUserHome.ConsultantCardWithPrice consultantName='Mbak Mbak asia' category='Food & Beverage' />
-                        <ClassUserHome.ConsultantCardWithPrice consultantName='Sultan Hafizh' category='Retail' />
-                        <ClassUserHome.ConsultantCardWithPrice consultantName='Oktovivian' category='Automotive' />
-                        <ClassUserHome.ConsultantCardWithPrice consultantName='Oktovivian' category='Automotive' />
-                        <ClassUserHome.ConsultantCardWithPrice consultantName='Oktovivian' category='Automotive' />
-                        <ClassUserHome.ConsultantCardWithPrice consultantName='Oktovivian' category='Automotive' />
-                        <ClassUserHome.ConsultantCardWithPrice consultantName='Oktovivian' category='Automotive' />
+                        {groupList.map((item, index) => {
+                            return (
+                                <div key={item.id}>
+                                    <label htmlFor='my-modal-3' onClick={() => handleModalData(index)}>
+                                        <ClassUserHome.ConsultantCardWithPrice consultantName={item.title.slice(9)} hargaKonsultasi={`165.000`} url={item.account % 2 == 0 ? `masmasjowo` : 'masmasganteng'} category='Food & Beverage' />
+                                    </label>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
                 <Button className={'w-1/6 btn btn-primary'}>Show More</Button>
@@ -65,8 +69,8 @@ const Consultation = () => {
                         <div className='flex flex-col-reverse md:grid grid-cols-2 gap-6 lg:flex lg:flex-row lg:gap-14 '>
                             <div className='' id='detail-paket'>
                                 <div id='user-biodata' className='flex flex-col gap-2 md:gap-4'>
-                                    <div className='h-[237px] max-w-[356px] lg:w-[356px] rounded-lg bg-slate-500'></div>
-                                    <h1 className='text-2xl font-semibold'>Antonio Sanjaya</h1>
+                                    <div className='h-[237px] max-w-[356px] lg:w-[356px] rounded-lg bg-slate-500 bg-[url(./public/img/backgroundRegister.svg)] bg-cover'></div>
+                                    {modalData != undefined && <h1 className='text-2xl font-semibold'>{groupList[modalData].title.slice(9)}</h1>}
                                     <div className='flex items-center gap-3 '>
                                         <p className='text-xl'>4.8</p>
                                         <IconStar className='w-4' />
@@ -74,8 +78,12 @@ const Consultation = () => {
                                 </div>
                             </div>
                             <div className='flex flex-col w-full'>
-                                <h1 className='card-modal-consultation pb-3'>Konsultasi Membangun Usaha Kuliner</h1>
-                                <p className='card-modal-consultation-category leading-[120%] text-primary'>Food & Beverage</p>
+                                {modalData != undefined && (
+                                    <>
+                                        <h1 className='card-modal-consultation pb-3'>{groupList[modalData].title}</h1>
+                                        <p className='card-modal-consultation-category leading-[120%] text-primary'>{groupList[modalData].category}</p>
+                                    </>
+                                )}
                                 <div className='divider'></div>
                                 <div className='flex flex-col gap-2'>
                                     <p className='font-semibold'>Description</p>
@@ -163,8 +171,8 @@ const Consultation = () => {
     );
 };
 
-const GetConsultant = () => {
-    return <h1>107 Consultants</h1>;
+const GetConsultant = ({ list }) => {
+    return <h1>{list} Consultants</h1>;
 };
 
 export default Consultation;

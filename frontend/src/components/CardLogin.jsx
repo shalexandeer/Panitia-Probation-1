@@ -14,8 +14,6 @@ const CardLogin = ({ onStateChange }) => {
 
     const { register, handleSubmit } = useForm();
 
-    const navigate = useNavigate();
-
     function refreshPage() {
         window.location.reload(false);
     }
@@ -41,7 +39,7 @@ const CardLogin = ({ onStateChange }) => {
                 setLoadingButton(false);
             });
         console.log(data);
-        setTimeout(() => refreshPage(), 300);
+        setTimeout(() => refreshPage(), 500);
     };
 
     const handleChange = () => {

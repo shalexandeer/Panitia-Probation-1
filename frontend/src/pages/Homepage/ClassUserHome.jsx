@@ -86,16 +86,16 @@ const ListConsultantSectionHome = ({ text1, text2 }) => {
 
 // component section
 
-const ConsultantCardWithPrice = ({ url = './public/img/counseling.svg', consultantName = 'consultant name', description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit....' }) => {
+const ConsultantCardWithPrice = ({ url = './public/img/mbakmbakasia.svg', consultantName = 'consultant name', description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit....', hargaKonsultasi, ...props }) => {
     return (
-        <Card className={' bg-white w-full border overflow-hidden rounded-[8px_!important]  duration-300 cursor-pointer sm:max-w-[416px] h-[424px]'}>
+        <Card {...props} className={' bg-white w-full border overflow-hidden rounded-[8px_!important]  duration-300 cursor-pointer sm:max-w-[416px] h-[424px]'}>
             <Card.Body className={'flex flex-col gap-2 '}>
                 <div className='flex flex-col items-center '>
-                    <div className='h-[250px] bg-slate-500 w-full'></div>
+                    <div className={`h-[250px] bg-slate-500 w-full bg-cover bg-[url(./public/img/${url}.svg)] `}></div>
                     <div className='flex flex-col p-5 gap-3'>
                         <h1 className='text-xl font-bold leading-[150%]'>{consultantName}</h1>
                         <p className='leading-[120%] font-normal text-lg '>{description}</p>
-                        <p className='text-primary'>Rp. 100.000</p>
+                        <p className='text-primary'>Start from Rp.{hargaKonsultasi}</p>
                     </div>
                 </div>
             </Card.Body>
