@@ -14,8 +14,6 @@ const CardLogin = ({ onStateChange }) => {
 
     const { register, handleSubmit } = useForm();
 
-    const navigate = useNavigate();
-
     function refreshPage() {
         window.location.reload(false);
     }

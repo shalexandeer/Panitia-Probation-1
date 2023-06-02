@@ -56,7 +56,7 @@ const Home = () => {
                                     <br /> sed do eiusmod tempor incididunt ut labore et dolore
                                 </p>
                                 <div id='call-to-action-wrapper' className='grid grid-cols-1 lg:flex lg:flex-row items-center gap-4 lg:gap-7  max-lg:items-center'>
-                                    <Button className={'bg-[#1496FF] text-white border-none text-base  lg:text-lg max-sm:max-w-[375px] w-full lg:w-[196px] max-lg:max-w-[375px]'}>Consultation Chat</Button>
+                                    <Button className={'bg-[#1496FF] text-white border-none text-base  lg:text-lg max-sm:max-w-[375px] w-full xl:w-[196px] max-lg:max-w-[375px]'}>Consultation Chat</Button>
                                 </div>
                             </>
                         )}
