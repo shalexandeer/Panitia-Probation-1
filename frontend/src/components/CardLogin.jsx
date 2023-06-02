@@ -21,7 +21,7 @@ const CardLogin = ({ onStateChange }) => {
     }
 
     const onSubmit = (data) => {
-        axios
+        const tmp = axios
             .post(
                 '/api/login',
                 {
@@ -35,13 +35,16 @@ const CardLogin = ({ onStateChange }) => {
                 }
             )
             .then((resp) => {
-                console.log(resp.data);
+                console.log("resp.data =",resp.data);
                 localStorage.setItem('token', resp.data['token']);
                 setStatusCode(resp.status);
                 setLoadingButton(false);
+            }).then((chain) => {
+                console.log("chain =",chain);
+                //setTimeout(() => refreshPage(), 500);
+                setTimeout(() => console.log(123), 500);
+
             });
-        console.log(data);
-        setTimeout(() => refreshPage(), 300);
     };
 
     const handleChange = () => {

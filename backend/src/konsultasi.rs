@@ -188,7 +188,7 @@ pub async fn create_consultationoffer(
     //auto => auto-fill e.g., NOW()
     // imply   | opt       | opt   | opt         | opt     | opt      | auto
     // account | category  | title | description | nominal | duration | tscreate
-    if db
+    match db
         .query(
             r#"
         INSERT INTO
@@ -207,11 +207,15 @@ pub async fn create_consultationoffer(
             ],
         )
         .await
-        .is_err()
     {
-        return r500! {"message" => "something went wrong"};
+        Ok(x) => {
+            return r200! {"message" => "successfully created consultation offer"};
+        }
+        Err(x) => {
+            println!("error: {x:#?}");
+            return r500! {"message" => "something went wrong. maybe this consultationoffer has already been created?"};
+        }
     }
-    return r200! {"message" => "successfully created consultation offer"};
 }
 
 //#[derive(Clone,PartialEq, Eq,Serialize,Deserialize)]
@@ -583,7 +587,7 @@ pub async fn live_chat(
         } else {
             println!("chat already exists");
         }
-        
+
         if let Some(x) = tmp.0.get_mut(&konsultasi_id).unwrap().0.insert(id, sender) {
             println!("closing old connection");
             x.closed().await
