@@ -3,13 +3,23 @@ import LayoutInputLabel from './../components/LayoutInputLabel';
 import Label from './../components/Label';
 import { useForm } from 'react-hook-form';
 import Heading from '../components/Heading';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '../components/Button';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Payment = () => {
     // handle change page
     let [pageCount, setPageCount] = useState(0);
+    const [order_target, setOrder_target] = useState(JSON.parse(localStorage.getItem('order_target')) || {});
+    const [konsultanInfo, setKonsultanInfo] = useState({});
+
+    useEffect(() => {
+        axios.get(`/api/pub_info?user_id=${order_target['account']}`).then((resp) => {
+            setKonsultanInfo(resp.data);
+        });
+    }, [order_target]);
+
     const handlePage = (event) => {
         event == '+' ? setPageCount((pageCount += 1)) : setPageCount((pageCount -= 1));
     };
@@ -17,13 +27,13 @@ const Payment = () => {
     return (
         <div className='bg-[#FAFCFE] h-screen'>
             <div className=' bg-no-repeat bg-cover container mx-auto '>
-                <div className='lg:grid lg:grid-cols-2 gap-[3.75rem] pt-[2rem] pl-5 pr-5 sm:pl-6 sm:pr-6 xl:p-[2rem_0_0_0] '>{pageCount == 0 ? <Payment.Order handlePage={handlePage} /> : pageCount == 1 ? <Payment.DetailPayment handlePage={handlePage} /> : ''}</div>
+                <div className='lg:grid lg:grid-cols-2 gap-[3.75rem] pt-[2rem] pl-5 pr-5 sm:pl-6 sm:pr-6 xl:p-[2rem_0_0_0] '>{pageCount == 0 ? <Payment.Order handlePage={handlePage} konsultanInfo={konsultanInfo} order_target={order_target} /> : pageCount == 1 ? <Payment.DetailPayment konsultanInfo={konsultanInfo} handlePage={handlePage} order_target={order_target} /> : ''}</div>
             </div>
         </div>
     );
 };
 
-const Order = ({ handlePage }) => {
+const Order = ({ handlePage, order_target, konsultanInfo }) => {
     const { register, handleSubmit } = useForm();
     const onSubmit = (data) => console.log(data);
 
@@ -145,8 +155,8 @@ const Order = ({ handlePage }) => {
                     <div id='detail-order-payment' className='pl-12 pr-12 grid grid-cols-2 pt-6 gap-6'>
                         <div className='bg-slate-600 h-[200px] rounded-2xl'></div>
                         <div className='flex flex-col justify-center'>
-                            <Heading text={'Antontio Sanjaya'} className={'text-base font-semibold leading-9'} />
-                            <h1 className='text-sm text-primary font-semibold'>Food & Beverage</h1>
+                            <Heading text={konsultanInfo['name']} className={'text-base font-semibold leading-9'} />
+                            <h1 className='text-sm text-primary font-semibold'>{order_target['category']}</h1>
                         </div>
                         <div id='material-course' className='flex flex-col gap-2'>
                             <p>Panduan Penyusunan BMC</p>
@@ -160,9 +170,28 @@ const Order = ({ handlePage }) => {
     );
 };
 
-const DetailPayment = ({ handlePage }) => {
+const DetailPayment = ({ handlePage, order_target, konsultanInfo }) => {
     const [selectValue, setSelectValue] = useState('Virtual Account');
-
+    useEffect(() => {
+        axios
+            .post(
+                'api/accept_consultationoffer',
+                {
+                    consultant: order_target['account'],
+                    category: order_target['category']
+                },
+                {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token'),
+                        'Content-Type': 'application/json'
+                    }
+                }
+            )
+            .then((resp) => {
+                console.log(resp.data);
+            });
+        console.log('order_target=', order_target);
+    });
     const handleSelectValue = (event) => {
         setSelectValue(event.target.value);
     };
@@ -201,8 +230,8 @@ const DetailPayment = ({ handlePage }) => {
                                                 <div>
                                                     <div className='bg-slate-600 h-[200px] rounded-2xl'></div>
                                                     <div className='flex flex-col justify-center'>
-                                                        <Heading text={'Antontio Sanjaya'} className={'text-base font-semibold leading-9'} />
-                                                        <h1 className='text-sm text-primary font-semibold'>Food & Beverage</h1>
+                                                        <Heading text={konsultanInfo['name']} className={'text-base font-semibold leading-9'} />
+                                                        <h1 className='text-sm text-primary font-semibold'>{order_target['category']}</h1>
                                                     </div>
                                                 </div>
                                                 <div id='material-course' className='flex flex-col gap-2'>
@@ -226,7 +255,7 @@ const DetailPayment = ({ handlePage }) => {
                     <button className='btn btn-outline btn-primary' onClick={() => handlePage('-')}>
                         go back
                     </button>
-                    <ModalPaymentSuccess />
+                    <ModalPaymentSuccess order_target={order_target} />
                 </div>
             </div>
             <div className='hidden lg:flex flex-col gap-3'>
@@ -309,7 +338,10 @@ const InstantPayment = () => {
     );
 };
 
-const ModalPaymentSuccess = () => {
+const ModalPaymentSuccess = ({ order_target }) => {
+    const handleAccept = () => {
+        console.log('order_target =', order_target);
+    };
     return (
         <>
             {/* The button to open modal */}
@@ -325,7 +357,9 @@ const ModalPaymentSuccess = () => {
                     <p className='py-4'>Payment ID: 120897561</p>
                     <div className='modal-action'>
                         <label htmlFor='my-modal' className='btn btn-wide btn-primary'>
-                            <Link to='/chat'>Go to room chat</Link>
+                            <Link onClick={handleAccept} to='/chat'>
+                                Go to room chat
+                            </Link>
                         </label>
                     </div>
                 </div>

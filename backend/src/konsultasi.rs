@@ -244,7 +244,7 @@ pub async fn delete_consultationoffer(
             "message" => "need parameter 'category'"
         };
     };
-
+    //https://dba.stackexchange.com/questions/267243/want-to-delete-then-insert-with-single-statement-using-a-cte-in-postgres
     if let Ok(x) = db
         .execute(
             r#"
@@ -353,7 +353,7 @@ pub async fn accept_consultationoffer(
             o.category,
             o.nominal,
             NOW()+o.duration * interval '1 sec'
-        FROM 
+        FROM
             consultationoffer AS o
             JOIN 
                 account as a

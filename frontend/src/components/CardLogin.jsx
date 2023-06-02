@@ -33,15 +33,15 @@ const CardLogin = ({ onStateChange }) => {
                 }
             )
             .then((resp) => {
-                console.log("resp.data =",resp.data);
+                console.log('resp.data =', resp.data);
                 localStorage.setItem('token', resp.data['token']);
                 setStatusCode(resp.status);
                 setLoadingButton(false);
-            }).then((chain) => {
-                console.log("chain =",chain);
-                //setTimeout(() => refreshPage(), 500);
-                setTimeout(() => console.log(123), 500);
-
+            })
+            .then((chain) => {
+                console.log('chain =', chain);
+                setTimeout(() => refreshPage(), 500);
+                // setTimeout(() => console.log(123), 500);
             });
     };
 

@@ -8,6 +8,7 @@ import axios from 'axios';
 const Home = () => {
     // Get user info
     const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('user')) || {});
+    console.log(userInfo['class']);
 
     useEffect(() => {
         axios
@@ -32,19 +33,20 @@ const Home = () => {
             <div className={`grid place-items-center pb-12 pl-5 pr-5 sm:pl-6 sm:pr-6 ${userInfo['class'] == 'U' && 'class-user-bg'} `} id='home-landing-page'>
                 <div className={`container mx-auto flex flex-col-reverse gap-10 lg:gap-0 ${userInfo['class'] == 'I' ? '' : 'lg:pt-12'} lg:grid lg:grid-cols-2`}>
                     <div className={`flex flex-col justify-center items-center lg:items-start gap-6 lg:gap-7 lg:pt-12  lg:pb-12 `}>
-                        {userInfo['class'] === undefined ||
-                            (userInfo['class'] == 'C' && (
-                                <>
-                                    <h1 className='text-center lg:text-start leading-10 md:leading-[3rem] xl:leading-[5rem] home-landing-heading font-semibold'>
-                                        Welcome to <br className='hidden lg:block' /> <span className='text-primary'>Fundify</span> Consult Your <br /> <span className='text-primary'>Business</span> Now!
-                                    </h1>
-                                    <p className='lg:text-start md:text-start max-w-[1054px] hidden text-center sm:flex font-normal text-lg text-[#6B7280] leading-6 md:leading-7 home-hero-paragraph'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
-                                    <div id='call-to-action-wrapper' className='grid grid-cols-2 lg:flex lg:flex-row items-center gap-4 lg:gap-7 max-lg:w-full'>
-                                        <Button className={'bg-[#1496FF] text-white border-none text-base  lg:text-lg max-sm:max-w-[375px] w-full lg:w-[196px]'}>Consult</Button>
-                                        <Button className='btn-outline font-semibold  text-primary leading-7 lg:text-lg max-sm:max-w-[375px] w-full lg:w-[196px] text-center'>Get Investor</Button>
-                                    </div>
-                                </>
-                            ))}
+                        {userInfo['class'] === undefined || userInfo['class'] == 'C' ? (
+                            <>
+                                <h1 className='text-center lg:text-start leading-10 md:leading-[3rem] xl:leading-[5rem] home-landing-heading font-semibold'>
+                                    Welcome to <br className='hidden lg:block' /> <span className='text-primary'>Fundify</span> Consult Your <br /> <span className='text-primary'>Business</span> Now!
+                                </h1>
+                                <p className='lg:text-start md:text-start max-w-[1054px] hidden text-center sm:flex font-normal text-lg text-[#6B7280] leading-6 md:leading-7 home-hero-paragraph'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+                                <div id='call-to-action-wrapper' className='grid grid-cols-2 lg:flex lg:flex-row items-center gap-4 lg:gap-7 max-lg:w-full'>
+                                    <Button className={'bg-[#1496FF] text-white border-none text-base  lg:text-lg max-sm:max-w-[375px] w-full lg:w-[196px]'}>Consult</Button>
+                                    <Button className='btn-outline font-semibold  text-primary leading-7 lg:text-lg max-sm:max-w-[375px] w-full lg:w-[196px] text-center'>Get Investor</Button>
+                                </div>
+                            </>
+                        ) : (
+                            ''
+                        )}
                         {userInfo['class'] == 'I' && <ClassInvestorHome.InvestorLanding />}
                         {userInfo['class'] == 'U' && (
                             <>
@@ -61,12 +63,13 @@ const Home = () => {
                             </>
                         )}
                     </div>
-                    {userInfo['class'] == undefined ||
-                        (userInfo['class'] == 'C' && (
-                            <div id='image-landing-user'>
-                                <img src='./public/img/image-landing-alluser.svg' className='w-full h-auto' alt='' />
-                            </div>
-                        ))}
+                    {userInfo['class'] == undefined || userInfo['class'] == 'C' ? (
+                        <div id='image-landing-user'>
+                            <img src='./public/img/image-landing-alluser.svg' className='w-full h-auto' alt='' />
+                        </div>
+                    ) : (
+                        ''
+                    )}
                     {userInfo['class'] == 'I' && (
                         <div id='image-landing-user'>
                             <img src='./public/img/home-class-investor-bg.svg' className='w-full h-auto' alt='' />
@@ -79,17 +82,18 @@ const Home = () => {
 
             {/* about us for all user class */}
 
-            {userInfo['class'] === undefined ||
-                (userInfo['class'] == 'C' && (
-                    <>
-                        <div id='aboutusbg' className={`pl-5 pr-5 ${userInfo['class'] == undefined ? 'flex' : 'hidden'}`}>
-                            <AboutUs text1='About us' text2='Provide various services to help grow your business your business' />
-                        </div>
-                        <div id='commercial-landing' className='pl-5 pr-5 sm:pl-6 sm:pr-6 '>
-                            <Commercial />
-                        </div>
-                    </>
-                ))}
+            {userInfo['class'] === undefined || userInfo['class'] == 'C' ? (
+                <>
+                    <div id='aboutusbg' className={`pl-5 pr-5 ${userInfo['class'] == undefined ? 'flex' : 'hidden'}`}>
+                        <AboutUs text1='About us' text2='Provide various services to help grow your business your business' />
+                    </div>
+                    <div id='commercial-landing' className='pl-5 pr-5 sm:pl-6 sm:pr-6 '>
+                        <Commercial />
+                    </div>
+                </>
+            ) : (
+                ''
+            )}
             {/* end about us for all user class */}
 
             {/* benefit section for UMKM user class */}

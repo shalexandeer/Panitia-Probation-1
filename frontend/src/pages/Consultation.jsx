@@ -100,7 +100,11 @@ const Consultation = () => {
                                         <h1 className='text-base pb-3'>/hours</h1>
                                     </div>
                                 </div>
-                                <Link to={'/payment'}>
+                                <Link
+                                    onClick={() => {
+                                        localStorage.setItem('order_target', JSON.stringify(groupList[modalData]));
+                                    }}
+                                    to={`/payment`}>
                                     <Button className={'btn btn-primary w-full'}>Buy Packet</Button>
                                 </Link>
                                 <p>Everything necessary to get started.</p>
