@@ -56,7 +56,7 @@ const ListConsultantSectionHome = ({ text1, text2 }) => {
                 <Home.HeadingHome text={text1} className={'text-base text-[#1496FF] font-semibold leading-6'} />
                 <Home.HeadingHome text={text2} className={'about-us-heading max-w-[793px] text-center leading-[120%] xl:leading-10 font-semibold'} />
             </div>
-            <div className='filter-consultant max-w-[1170px] flex gap-4 lg:gap-8 overflow-x-scroll w-full justify-center'>
+            <div className='filter-consultant max-w-[1170px] flex gap-4 lg:gap-8 max-md:overflow-x-scroll w-full justify-center'>
                 <Button className={`btn ${filterConsultant != 'Food & Beverage' && 'btn-outline'} btn-primary lg:btn-wide`} onClick={handleFilterConsultant}>
                     Food & Beverage
                 </Button>

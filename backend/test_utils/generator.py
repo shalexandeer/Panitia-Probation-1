@@ -79,9 +79,67 @@ async def register_all(data_list: List[dict[str,str]],loop):
         results = await asyncio.gather(*[register(session, data) for data in data_list], return_exceptions=True)
         return results
 
+from i import User
+from faker import Faker
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    jsonl = ready() 
-    output = loop.run_until_complete(register_all(jsonl, loop))
-    print()
-    print(output)
+    #loop = asyncio.get_event_loop()
+    #jsonl = ready() 
+    #output = loop.run_until_complete(register_all(jsonl, loop))
+    #print()
+    #print(output)
+    N=20
+    f=Faker()
+    d=[]
+    for i in range(N):
+        name=f.name()
+        email=name+f.free_email_domain()
+        user=User(
+        username=name,
+        email=email,
+        phone="123",
+        password="password",
+        typ="C",
+        address="A",
+        title=f"TITLE BY {name}",
+        category="CATEGORY",
+        description="DESCRIPTION",
+        nominal=999,
+        duration=3600,
+        forum_id=0,
+        message=f"MESSAGE FROM {name}",
+        konsultasi_id=0,
+        consultant=0,
+        target_id=0,)
+        tmp=user.register()
+        i=0
+        while tmp.ok==False:
+            name=f.name()
+            email=name+f.free_email_domain()
+            phone=f.phone_number()
+            i+=1
+            user=User(
+            username=name,
+            email=email,
+            phone=phone,
+            password="password",
+            typ="C",
+            address="A",
+            title=f"TITLE BY {name}",
+            category="CATEGORY",
+            description="DESCRIPTION",
+            nominal=999,
+            duration=3600,
+            forum_id=0,
+            message=f"MESSAGE FROM {name}",
+            konsultasi_id=0,
+            consultant=0,
+            target_id=0,)
+            tmp=user.register()
+            print(i,tmp.content)
+        d.append(user)
+    for i,acc in enumerate(d):
+        print(f" === {i+1} ===")
+        print(acc.login().content)
+        print(acc.create_consultationoffer().content)
+    pass
+

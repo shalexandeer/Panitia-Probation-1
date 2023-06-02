@@ -4,6 +4,7 @@ import Button from '../components/Button';
 import { useForm } from 'react-hook-form';
 import LayoutInputLabel from '../components/LayoutInputLabel';
 import Modal from '../components/Modal';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 //Layout
 const Forum = () => {
@@ -47,8 +48,13 @@ const AllDiscussion = ({}) => {
         setFilterActive(event.target.innerText);
     };
 
+    const navigate = useNavigate();
+
+    const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('user')) || {});
+
     const [pageAddQuestion, setPageAddQuestion] = useState(false);
     const handleSwitchAddQuestion = () => {
+        if (userInfo['class'] == undefined) navigate('/auth');
         setPageAddQuestion((prev) => !prev);
     };
 

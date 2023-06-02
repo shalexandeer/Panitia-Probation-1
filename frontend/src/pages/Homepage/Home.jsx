@@ -18,6 +18,7 @@ const Home = () => {
             })
             .then((resp) => {
                 localStorage.setItem('user', JSON.stringify(resp.data));
+                console.log(userInfo['class']);
             });
     }, []);
 
@@ -31,18 +32,19 @@ const Home = () => {
             <div className={`grid place-items-center pb-12 pl-5 pr-5 sm:pl-6 sm:pr-6 ${userInfo['class'] == 'U' && 'class-user-bg'} `} id='home-landing-page'>
                 <div className={`container mx-auto flex flex-col-reverse gap-10 lg:gap-0 ${userInfo['class'] == 'I' ? '' : 'lg:pt-12'} lg:grid lg:grid-cols-2`}>
                     <div className={`flex flex-col justify-center items-center lg:items-start gap-6 lg:gap-7 lg:pt-12  lg:pb-12 `}>
-                        {userInfo['class'] === undefined && (
-                            <>
-                                <h1 className='text-center lg:text-start leading-10 md:leading-[3rem] xl:leading-[5rem] home-landing-heading font-semibold'>
-                                    Welcome to <br className='hidden lg:block' /> <span className='text-primary'>Fundify</span> Consult Your <br /> <span className='text-primary'>Business</span> Now!
-                                </h1>
-                                <p className='lg:text-start md:text-start max-w-[1054px] hidden text-center sm:flex font-normal text-lg text-[#6B7280] leading-6 md:leading-7 home-hero-paragraph'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
-                                <div id='call-to-action-wrapper' className='grid grid-cols-2 lg:flex lg:flex-row items-center gap-4 lg:gap-7 max-lg:w-full'>
-                                    <Button className={'bg-[#1496FF] text-white border-none text-base  lg:text-lg max-sm:max-w-[375px] w-full lg:w-[196px]'}>Consult</Button>
-                                    <Button className='btn-outline font-semibold  text-primary leading-7 lg:text-lg max-sm:max-w-[375px] w-full lg:w-[196px] text-center'>Get Investor</Button>
-                                </div>
-                            </>
-                        )}
+                        {userInfo['class'] === undefined ||
+                            (userInfo['class'] == 'C' && (
+                                <>
+                                    <h1 className='text-center lg:text-start leading-10 md:leading-[3rem] xl:leading-[5rem] home-landing-heading font-semibold'>
+                                        Welcome to <br className='hidden lg:block' /> <span className='text-primary'>Fundify</span> Consult Your <br /> <span className='text-primary'>Business</span> Now!
+                                    </h1>
+                                    <p className='lg:text-start md:text-start max-w-[1054px] hidden text-center sm:flex font-normal text-lg text-[#6B7280] leading-6 md:leading-7 home-hero-paragraph'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+                                    <div id='call-to-action-wrapper' className='grid grid-cols-2 lg:flex lg:flex-row items-center gap-4 lg:gap-7 max-lg:w-full'>
+                                        <Button className={'bg-[#1496FF] text-white border-none text-base  lg:text-lg max-sm:max-w-[375px] w-full lg:w-[196px]'}>Consult</Button>
+                                        <Button className='btn-outline font-semibold  text-primary leading-7 lg:text-lg max-sm:max-w-[375px] w-full lg:w-[196px] text-center'>Get Investor</Button>
+                                    </div>
+                                </>
+                            ))}
                         {userInfo['class'] == 'I' && <ClassInvestorHome.InvestorLanding />}
                         {userInfo['class'] == 'U' && (
                             <>
@@ -59,11 +61,12 @@ const Home = () => {
                             </>
                         )}
                     </div>
-                    {userInfo['class'] == undefined && (
-                        <div id='image-landing-user'>
-                            <img src='./public/img/image-landing-alluser.svg' className='w-full h-auto' alt='' />
-                        </div>
-                    )}
+                    {userInfo['class'] == undefined ||
+                        (userInfo['class'] == 'C' && (
+                            <div id='image-landing-user'>
+                                <img src='./public/img/image-landing-alluser.svg' className='w-full h-auto' alt='' />
+                            </div>
+                        ))}
                     {userInfo['class'] == 'I' && (
                         <div id='image-landing-user'>
                             <img src='./public/img/home-class-investor-bg.svg' className='w-full h-auto' alt='' />
@@ -76,16 +79,17 @@ const Home = () => {
 
             {/* about us for all user class */}
 
-            {userInfo['class'] === undefined && (
-                <>
-                    <div id='aboutusbg' className={`pl-5 pr-5 ${userInfo['class'] == 'all' ? 'flex' : 'hidden'}`}>
-                        <AboutUs text1='About us' text2='Provide various services to help grow your business your business' />
-                    </div>
-                    <div id='commercial-landing' className='pl-5 pr-5 sm:pl-6 sm:pr-6 '>
-                        <Commercial />
-                    </div>
-                </>
-            )}
+            {userInfo['class'] === undefined ||
+                (userInfo['class'] == 'C' && (
+                    <>
+                        <div id='aboutusbg' className={`pl-5 pr-5 ${userInfo['class'] == undefined ? 'flex' : 'hidden'}`}>
+                            <AboutUs text1='About us' text2='Provide various services to help grow your business your business' />
+                        </div>
+                        <div id='commercial-landing' className='pl-5 pr-5 sm:pl-6 sm:pr-6 '>
+                            <Commercial />
+                        </div>
+                    </>
+                ))}
             {/* end about us for all user class */}
 
             {/* benefit section for UMKM user class */}
@@ -180,19 +184,19 @@ const ConsultantSection = ({ text1 = 'text1', text2 = 'text2' }) => {
                 <HeadingHome text={text2} className={'about-us-heading max-w-[793px] text-center leading-[120%] xl:leading-10 font-semibold'} />
             </div>
             <div id='about-us-card' className='max-w-[978px] w-full  flex flex-col sm:grid grid-cols-2 md:flex md:flex-row justify-center gap-6 '>
-                <ConsultantCard consultantName='Mbak Mbak asia' category='Food & Beverage' />
-                <ConsultantCard consultantName='Sultan Hafizh' category='Retail' />
-                <ConsultantCard consultantName='Oktovivian' category='Automotive' />
+                <ConsultantCard consultantName='Mbak Mbak asia' category='Food & Beverage' url='mbakmbakasia' />
+                <ConsultantCard consultantName='Sultan Hafizh' category='Retail' url='masmasganteng' />
+                <ConsultantCard consultantName='Oktovivian' category='Automotive' url='masmasjowo' />
             </div>
         </div>
     );
 };
-const ConsultantCard = ({ url = './public/img/counseling.svg', consultantName = 'consultant name', category = 'consultant category' }) => {
+const ConsultantCard = ({ url = 'mbakmbakasia', consultantName = 'consultant name', category = 'consultant category' }) => {
     return (
-        <Card className={' bg-white w-full border overflow-hidden rounded-[8px_!important]  duration-300 cursor-pointer sm:max-w-[416px] h-[424px]'}>
+        <Card className={' bg-white w-full border overflow-hidden rounded-[8px_!important]  duration-300 cursor-pointer hover:scale-110 hover:shadow-lg sm:max-w-[416px] h-[424px]'}>
             <Card.Body className={'flex flex-col gap-2 '}>
                 <div className='flex flex-col gap-5 items-center '>
-                    <div className='h-[300px] bg-slate-500 w-full'></div>
+                    <div className={`h-[300px] bg-[url(./public/img/${url}.svg)] w-full`}></div>
                     <div className='flex flex-col '>
                         <h1 className='text-xl font-bold leading-[150%]'>{consultantName}</h1>
                         <p className='max-w-[293px] leading-[180%] font-normal text-sm text-center '>{category}</p>

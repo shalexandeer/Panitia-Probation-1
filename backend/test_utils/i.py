@@ -2,11 +2,40 @@ import json
 import requests as R
 import argparse
 
-parser = argparse.ArgumentParser("simple_example")
-parser.add_argument("N", help="0 for consultant, 1 for umkm", type=int)
-args = parser.parse_args()
 
 # self.token = ""
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser("simple_example")
+    parser.add_argument("N", help="0 for consultant, 1 for umkm", type=int)
+    args = parser.parse_args()
+    URL = "http://127.0.0.1:3030"
+    TARGET_ID = 1
+    USERNAME = "Konsultan_joko"
+    EMAIL = "joko@gmail.com"
+    PHONE = "08163781236"
+    PASSWORD = "jokoganteng"
+    TYP = "C"
+    ADDRESS = "rumah joko"
+    TITLE = "joko jago"
+    CATEGORY = "food-and-beverages"
+    DESCRIPTION = "saya jago jual minuman"
+    NOMINAL = 14000
+    DURATION = 3600
+    FORUM_ID = 1
+    MESSAGE = "ini pesan dari joko"
+    KONSULTASI_ID = 1
+    CONSULTANT = 1
+
+    if args.N == 1:
+        USERNAME = "UMKM_lemonade"
+        EMAIL = "lemonade@lemonade-business.com"
+        PHONE = "99911112222"
+        PASSWORD = "lemonade_sukses"
+        TYP = "U"
+        ADDRESS = "lemonade bandung"
+        MESSAGE = "ini pesan dari lemonade"
+
+
 URL = "http://127.0.0.1:3030"
 TARGET_ID = 1
 USERNAME = "Konsultan_joko"
@@ -24,16 +53,6 @@ FORUM_ID = 1
 MESSAGE = "ini pesan dari joko"
 KONSULTASI_ID = 1
 CONSULTANT = 1
-
-if args.N == 1:
-    USERNAME = "UMKM_lemonade"
-    EMAIL = "lemonade@lemonade-business.com"
-    PHONE = "99911112222"
-    PASSWORD = "lemonade_sukses"
-    TYP = "U"
-    ADDRESS = "lemonade bandung"
-    MESSAGE = "ini pesan dari lemonade"
-
 
 class User:
     def __init__(
@@ -228,5 +247,5 @@ class User:
                 "Authorization": "Bearer "+self.token
             }.copy(),
         )
-
-u=User()
+if __name__ == "__main__":
+    u=User()

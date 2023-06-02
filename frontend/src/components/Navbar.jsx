@@ -66,7 +66,7 @@ const Navbar = ({ children, className }) => {
                                             <Link to='/consultation'>Consultation</Link>
                                         </li>
                                         <li className={`${path == '/fundingform' && 'activeLink'}`}>
-                                            <Link to='/fundingform'>Funding Form</Link>
+                                            <Link to='/fundingform'>Create Form</Link>
                                         </li>
                                         <li className={`${path == '/forum' && 'activeLink'}`}>
                                             <Link to='/forum'>Forum</Link>
@@ -139,7 +139,7 @@ const Navbar = ({ children, className }) => {
                             <Link to='/consultation'>Consultation</Link>
                         </li>
                         <li className={`${path == '/fundingform' && 'activeLink'}`}>
-                            <Link to='/fundingform'>Funding Form</Link>
+                            <Link to='/fundingform'>Create Form</Link>
                         </li>
                         <li className={`${path == '/forum' && 'activeLink'}`}>
                             <Link to='/forum'>Forum</Link>

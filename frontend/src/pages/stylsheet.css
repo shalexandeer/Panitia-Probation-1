@@ -1,0 +1,446 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+    display: block;
+}
+
+body {
+    line-height: 1;
+}
+
+ol,
+ul {
+    list-style: none;
+}
+
+blockquote,
+q {
+    quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+html {
+    font-family: 'inter', sans-serif;
+    width: 100%;
+}
+
+.Logo {
+    position: absolute;
+    display: flex;
+    width: 83px;
+    height: 93px;
+    left: 43px;
+    top: 15px;
+
+}
+
+body {
+    background-color: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.Consultation_form {
+    margin-left: 100px;
+    margin-top: 44px;
+    margin-bottom: 17px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 60px;
+    color: #111827;
+}
+
+.Top {
+    list-style-type: none;
+    display: flex;
+    margin: 0;
+    padding: 0px 100px;
+    width: 100%;
+    background-color: #FFFFFF;
+}
+
+.home {
+    padding: 51px 34px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 29px;
+    color: #111827;
+}
+
+.consultation {
+    padding: 51px 34px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 29px;
+    color: #111827;
+}
+
+.funding {
+    padding: 51px 34px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 29px;
+    color: #111827;
+    border-width: 5px;
+    border-bottom: 2px solid #1496FF;
+}
+
+.forum {
+    padding: 51px 34px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 29px;
+    color: #111827;
+}
+
+
+.mainPanel {
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    padding: 35px 40px;
+    margin-left: 50px;
+    width: 100%;
+    max-width: 1720px;
+    display: flex;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.leftPanel {
+    padding: 10px 30px;
+    width: 100%;
+}
+
+.title_input {
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin-top: 9px;
+    margin-bottom: 21px;
+    width: 100%;
+    border-color: #5A5A5D;
+    border-width: 0.5px;
+}
+
+.description_input {
+    border-radius: 10px;
+    padding: 50px 20px;
+    margin-top: 9px;
+    margin-bottom: 21px;
+    width: 100%;
+    border-color: #5A5A5D;
+    border-width: 0.5px;
+}
+
+.Category_select {
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin-top: 9px;
+    margin-bottom: 60px;
+    width: 100%;
+    border-color: #5A5A5D;
+    border-width: 0.5px;
+}
+
+.rightPanel {
+    padding: 10px 20px;
+    padding-left: 60px;
+    padding-right: 60px;
+    width: 100%;
+}
+
+.Consultants_name_input {
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin-top: 9px;
+    margin-bottom: 21px;
+    width: 100%;
+    border-color: #5A5A5D;
+    border-width: 0.5px;
+}
+
+.Duration_input {
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin-top: 9px;
+    margin-bottom: 40px;
+    width: 100%;
+    border-color: #5A5A5D;
+    border-width: 0.5px;
+}
+
+.Price_input {
+    border-radius: 10px;
+    padding: 10px 20px;
+    width: 100%;
+    margin-top: 9px;
+    margin-bottom: 21px;
+    border-color: #5A5A5D;
+    border-width: 0.5px;
+}
+
+.fundingSubmission {
+    background-color: #1496FF;
+    padding: 10px 44px;
+    margin-top: 9px;
+    margin-bottom: 21px;
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    width: 60%;
+    color: #FFFFFF;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 28px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+}
+
+
+.submit {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.profilPoto {
+    position: absolute;
+    width: 173.54px;
+    height: 115.21px;
+    left: 1699.08px;
+    top: 28.08px;
+}
+
+@media (orientation : portrait) {
+    .Consultation_form {
+        position: absolute;
+        top: 20%;
+        left: 0;
+
+    }
+
+    .mainPanel {
+        position: absolute;
+        top: 30%;
+        padding: 120px;
+        margin-left: 0px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .leftPanel {
+        padding: 10px 30px;
+        width: 100%;
+    }
+
+    .title_input {
+        border-radius: 10px;
+        padding: 10px 20px;
+        margin-top: 9px;
+        margin-bottom: 21px;
+        width: 93%;
+        border-color: #5A5A5D;
+        border-width: 1px;
+    }
+
+    .Category_select {
+        border-radius: 10px;
+        padding: 50px 20px;
+        margin-top: 9px;
+        margin-bottom: 21px;
+        width: 97%;
+        border-color: #5A5A5D;
+        border-width: 1px;
+    }
+
+    .description_input {
+        border-radius: 10px;
+        padding: 10px 20px;
+        margin-top: 9px;
+        margin-bottom: 21px;
+        width: 93%;
+        border-color: #5A5A5D;
+        border-width: 1px;
+    }
+
+    .rightPanel {
+        padding-left: 60px;
+        padding-right: 60px;
+        width: 100%;
+    }
+
+    .Consultants_name_input {
+        border-radius: 10px;
+        padding: 10px 20px;
+        margin-left: 0;
+        margin-top: 9px;
+        margin-bottom: 21px;
+        width: 90%;
+        border-color: #5A5A5D;
+        border-width: 1px;
+    }
+
+    .Duration_input {
+        border-radius: 10px;
+        padding: 10px 20px;
+        margin-top: 9px;
+        margin-bottom: 21px;
+        width: 90%;
+        border-color: #5A5A5D;
+        border-width: 1px;
+    }
+
+    .Price_input {
+        border-radius: 10px;
+        padding: 10px 20px;
+        width: 90%;
+        margin-top: 9px;
+        margin-bottom: 21px;
+        border-color: #5A5A5D;
+        border-width: 1px;
+    }
+
+    .fundingSubmission {
+        background-color: #1496FF;
+        padding: 10px 44px;
+        margin-top: 9px;
+        margin-bottom: 21px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50%;
+        color: #FFFFFF;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 17px;
+        line-height: 28px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 10px;
+    }
+
+    .submit {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+}
