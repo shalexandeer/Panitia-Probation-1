@@ -21,6 +21,7 @@ const Payment = () => {
     }, [order_target]);
 
     const handlePage = (event) => {
+        console.log("clicked handlePage");
         event == '+' ? setPageCount((pageCount += 1)) : setPageCount((pageCount -= 1));
     };
 
@@ -139,7 +140,7 @@ const Order = ({ handlePage, order_target, konsultanInfo }) => {
                 </div>
                 <div id='button-payment-wrapper' className='flex sm:justify-end '>
                     <Button className={`border-none text-white sm:w-[439px] max-sm:w-full ${termsChecked ? 'bg-primary ' : 'btn-disabled'}`} onClick={() => handlePage('+')}>
-                        Go to Payment
+                        Go To Payment
                     </Button>
                 </div>
             </div>

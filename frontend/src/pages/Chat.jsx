@@ -45,6 +45,7 @@ const Chat = () => {
 // chat sebelah kiri
 const ChatList = ({ handleChooseChat, konsultasi_list, handleKonsultasiTarget }) => {
     const choosedChatHandle = (e) => {
+        console.log("clicked choosedChatHandle")
         handleKonsultasiTarget(e);
     };
 
@@ -54,8 +55,8 @@ const ChatList = ({ handleChooseChat, konsultasi_list, handleKonsultasiTarget })
             <Card.Body className={'flex flex-col gap-5'}>
                 {konsultasi_list.map((item) => {
                     return (
-                        <div onClick={() => choosedChatHandle(item.id)} key={item.id}>
-                            <ConsultantCard handleChooseChat={handleChooseChat} name={item.name} />
+                        <div key={item.id}>
+                            <ConsultantCard handleChooseChat={() => handleKonsultasiTarget(item.id)} name={item.name} />
                         </div>
                     );
                 })}
@@ -66,7 +67,7 @@ const ChatList = ({ handleChooseChat, konsultasi_list, handleKonsultasiTarget })
 // component sebelah kiri
 const ConsultantCard = ({ className, showDivider, handleChooseChat, name, key }) => {
     return (
-        <div className={`${className}`}>
+        <div className={`${className}`} onClick={() => handleChooseChat()}>
             <div value={key} className={`divider m-[0px_!important] pb-4 ${showDivider == false && 'hidden'} `}></div>
             <div className='flex justify-between items-center'>
                 <div className='flex gap-4'>
@@ -76,7 +77,7 @@ const ConsultantCard = ({ className, showDivider, handleChooseChat, name, key })
                         </div>
                     </div>
                     <div id='consultant-information'>
-                        <h1>{name} message</h1>
+                        <h1>{name}</h1>
                         <h1>halo</h1>
                     </div>
                 </div>

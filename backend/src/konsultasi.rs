@@ -578,8 +578,8 @@ pub async fn live_chat(
         String::from("invalid")
     };
     if let Ok(x) = flash_bearer_verify(&bearer, &flash_key, &db).await {
-        println!("bearer verified");
         id = x.id;
+        println!("bearer verified, id={id}");
         let mut tmp = chats.lock().await;
         if let None = tmp.0.get(&konsultasi_id) {
             println!("new chat");
@@ -587,13 +587,15 @@ pub async fn live_chat(
         } else {
             println!("chat already exists");
         }
-
+        println!("marker 1");
         if let Some(x) = tmp.0.get_mut(&konsultasi_id).unwrap().0.insert(id, sender) {
-            println!("closing old connection");
-            x.closed().await
+            println!("changin old connection");
+            x.closed();
+            println!("old connection leave to be closed");
         } else {
             println!("no old connection");
         }
+        println!("marker 2");
     } else {
         println!("unverified {bearer}...closing!");
         receiver.close();
