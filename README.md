@@ -1,7 +1,5 @@
 # Fundify: Empowering SMEs with Funding, Consultation, and Collaboration
 
-<p align="center"><img src="path_to_your_logo.png" width="200" alt="Fundify Logo"></p>
-
 Welcome to Fundify, a dynamic platform dedicated to Small and Medium-sized Enterprises (SMEs) seeking funding opportunities, expert business consultation, and collaborative learning. Our goal is to empower SMEs with the resources they need to thrive and grow in today's competitive business landscape.
 
 ## About Fundify
@@ -44,8 +42,12 @@ Fundify is built using a robust technology stack to ensure a seamless and secure
 - Deployment: AWS
 # Setting up project
 First clone it into your local projects
-## Setting Up Frontend
 
+## Setting Up Frontend
+1. Install all the dependencies from your terminal
+`npm install`
+2. Run the projects
+`npm run dev`
 ## Setting Up Backend
 
 To set up the backend of the Fundify project, follow these steps:
